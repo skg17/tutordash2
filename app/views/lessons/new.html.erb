@@ -1,10 +1,20 @@
-<h1>New Entry</h1>
+<h1>Add Lesson</h1>
 <%= form_with(model: @lesson) do |form| %>
- <div>
-   <%= form.label :name %>
-   <%= form.text_field :name %>
- </div>
- <div>
-   <%= form.submit %>
- </div>
+    <div>
+        <%= form.label :name, "Student" %>
+        <%= form.text_field :name %>
+    </div>
+    <div class="field">
+        <%= form.label :date, "Date of Lesson" %>
+        <%= form.date_select :date %>
+    </div>
+    <div>
+        <%= form.submit %>
+    </div>
 <% end %>
+
+<br>
+
+<div>
+    <%= link_to "Back to home", root_path %>
+</div>
