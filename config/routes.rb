@@ -15,5 +15,5 @@ end
 
 Rails.application.routes.draw do
  root 'lessons#index'
- resources :lessons, only: [:create, :new]
+ resources :lessons, only: [:create, :new, :destroy]
 end

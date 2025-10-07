@@ -16,6 +16,11 @@ class LessonsController < ApplicationController
         end
    end
 
+   def destroy
+       Lesson.find(params[:id]).destroy
+       redirect_to root_url
+   end   
+
    private
 
    def lesson_params
