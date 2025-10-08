@@ -5,6 +5,14 @@
         <%= form.text_field :name %>
         <%= form.label :date, "Date of Lesson" %>
         <%= form.date_select :date %>
+        <%= form.label :name, "Duration" %>
+        <%= form.text_field :duration %>
+        <%= form.label :name, "Subject" %>
+        <%= form.text_field :subject %>
+        <%= form.label :paid %>
+        <%= form.select :paid, [['Yes', true], ['No', false]] %>
+        <%= form.label :homework %>
+        <%= form.text_field :homework %>
     </div>
     <div>
         <%= form.submit %>

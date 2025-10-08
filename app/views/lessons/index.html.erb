@@ -3,6 +3,10 @@
  <% @lessons.each do |lesson| %>
   <%= lesson.name %>
   <%= lesson.date %>
+  <%= lesson.duration %>
+  <%= lesson.subject %>
+  <%= lesson.paid %>
+  <%= lesson.homework %>
   <%= button_to "Delete", lesson, method: :delete, data: { turbo_confirm: "Are you sure you want to delete this Lesson ?"} %>
  <% end %>
 </div>
