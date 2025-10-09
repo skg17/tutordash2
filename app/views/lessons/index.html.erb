@@ -1,5 +1,3 @@
-<!-- The content below will be yielded into the <main> tag of application.html.erb -->
-
 <!-- Page Header -->
 <section class="flex justify-between items-center mb-8">
     <div>
@@ -20,7 +18,6 @@
         
         <%
             # --- Mocking dynamic properties and status for styling ---
-            # Replace this logic with your actual lesson status logic
             status_text = case lesson.paid.to_s.downcase
                           when 'true' then 'Upcoming'
                           when 'false' then 'Scheduled'
@@ -30,11 +27,6 @@
             
             # Determines button text/style
             is_upcoming = status_text == 'Upcoming'
-            
-            # Content mapping assumptions:
-            # lesson.name is Subject/Topic (e.g., 'Mathematics - Calculus')
-            # lesson.subject is the Student's Name (e.g., 'Emma Wilson')
-            # lesson.date holds the date/time string
         %>
 
         <!-- Lesson Card -->
@@ -76,19 +68,19 @@
                 </div>
             </div>
 
-            <!-- Right Actions -->
-            <div class="flex flex-col space-y-2 ml-4 md:ml-0">
+            <!-- Right Actions (Updated to enforce equal button width) -->
+            <div class="flex flex-col space-y-2 ml-4 min-w-[140px]">
                 
                 <!-- View Details Button -->
-                <%= link_to "View Details", lesson_path(lesson), class: "px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
+                <%= link_to "View Details", lesson_path(lesson), class: "w-full px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
 
                 <!-- Start Session/Delete Button (Conditional) -->
                 <% if is_upcoming %>
-                    <%= link_to "Start Session", "#", class: "px-4 py-2 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-md hover:bg-purple-700 transition duration-150 text-center" %>
-                <% else %>
-                    <!-- Example of a non-upcoming lesson action (e.g., Delete or Review) -->
-                    <%= button_to "Delete", lesson, method: :delete, data: { turbo_confirm: "Are you sure?"}, class: "px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150 text-center" %>
+                    <%= link_to "Start Session", "#", class: "w-full px-4 py-2 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-md hover:bg-purple-700 transition duration-150 text-center" %>
                 <% end %>
+                <!-- Added w-full here -->
+                <%= button_to "Delete", lesson, method: :delete, data: { turbo_confirm: "Are you sure?"}, class: "w-full px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150 text-center" %>
+            
             </div>
         </div>
 

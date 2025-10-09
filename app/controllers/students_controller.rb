@@ -10,7 +10,7 @@ class StudentsController < ApplicationController
    def create
         @student = Student.new(student_params)
         if @student.save
-           redirect_to root_url
+           redirect_to students_path
         else
             render :new
         end
@@ -18,7 +18,7 @@ class StudentsController < ApplicationController
 
    def destroy
        Student.find(params[:id]).destroy
-       redirect_to root_url
+       redirect_to students_path
    end   
 
    private

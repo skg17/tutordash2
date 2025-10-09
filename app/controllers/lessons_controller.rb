@@ -10,7 +10,7 @@ class LessonsController < ApplicationController
    def create
         @lesson = Lesson.new(lesson_params)
         if @lesson.save
-           redirect_to root_url
+           redirect_to lessons_path
         else
             render :new
         end
@@ -18,7 +18,7 @@ class LessonsController < ApplicationController
 
    def destroy
        Lesson.find(params[:id]).destroy
-       redirect_to root_url
+       redirect_to lessons_path
    end   
 
    private
