@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tutordash-ingress
+  # Annotations needed if using cert-manager for auto-SSL later
+  # annotations:
+  #   cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+  - host: tutordash.sahilgoonraz.com # The URL you want to use
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tutordash-service # Points to the Service above
+            port:
+              number: 80 # Points to the Service's port

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tutordash
+spec:
+  replicas: 2 # Run 2 copies for reliability
+  selector:
+    matchLabels:
+      app: tutordash
+  template:
+    metadata:
+      labels:
+        app: tutordash
+    spec:
+      containers:
+      - name: app
+        # !! THIS LINE GETS UPDATED BY GITHUB ACTIONS !!
+        image: ghcr.io/YOUR_USERNAME/YOUR_REPO:initial # Placeholder image
+        ports:
+        - containerPort: 3000
