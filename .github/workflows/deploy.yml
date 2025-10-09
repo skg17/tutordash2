@@ -31,11 +31,9 @@ jobs:
         with:
           context: . # Assumes Dockerfile is in the root
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}:latest # Tag with unique commit ID
-          # Optional: Add a 'latest' tag too if needed:
-          # tags: |
-          #  ghcr.io/${{ github.repository }}:${{ github.sha }}
-          #  ghcr.io/${{ github.repository }}:latest
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest
 
       - name: Update Kubernetes manifest (IMPORTANT GitOps step)
         run: |
