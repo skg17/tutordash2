@@ -15,6 +15,6 @@ spec:
       containers:
       - name: app
         # !! THIS LINE GETS UPDATED BY GITHUB ACTIONS !!
-        image: ghcr.io/YOUR_USERNAME/YOUR_REPO:initial # Placeholder image
+        image: ghcr.io/skg17/tutordash2:latest # Placeholder image
         ports:
         - containerPort: 3000
