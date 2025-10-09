@@ -8,7 +8,7 @@ class StudentsController < ApplicationController
    end
 
    def create
-        @student = Student.new(lesson_params)
+        @student = Student.new(student_params)
         if @student.save
            redirect_to root_url
         else
