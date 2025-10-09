@@ -39,12 +39,19 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
 
+      - name: Calculate Image Tag for Manifest
+        id: set_vars
+        run: |
+          # Calculate the full image path and store it in an output variable
+          IMAGE_TAG="ghcr.io/${{ github.repository }}:latest"
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+
       - name: Update Kubernetes Image Tag to :latest
         uses: mikefarah/yq@v4
         with:
           cmd: |
             # Set the image to the newly pushed :latest tag
-            yq -i ".spec.template.spec.containers[0].image = \"ghcr.io/${{ github.repository }}:latest\"" k8s/deployment.yaml
+            yq -i '.spec.template.spec.containers[0].image = "${{ steps.set_vars.outputs.IMAGE_TAG }}"' k8s/deployment.yaml
 
       - name: Commit and push manifest changes
         uses: stefanzweifel/git-auto-commit-action@v5
