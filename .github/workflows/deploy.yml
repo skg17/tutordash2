@@ -44,7 +44,7 @@ jobs:
         with:
           cmd: |
             # Set the image to the newly pushed :latest tag
-            yq -i ".spec.template.spec.containers[0].image = \"ghcr.io/${{ github.repository }:latest\"" k8s/deployment.yaml
+            yq -i ".spec.template.spec.containers[0].image = \"ghcr.io/${{ github.repository }}:latest\"" k8s/deployment.yaml
 
       - name: Commit and push manifest changes
         uses: stefanzweifel/git-auto-commit-action@v5
