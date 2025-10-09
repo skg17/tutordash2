@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: tutordash
 spec:
-  replicas: 2 # Run 2 copies for reliability
+  replicas: 2
   selector:
     matchLabels:
       app: tutordash
@@ -12,24 +12,61 @@ spec:
       labels:
         app: tutordash
     spec:
+      # 1. INIT CONTAINERS RUN FIRST (FOR MIGRATIONS)
+      initContainers:
+      - name: migrations
+        image: ghcr.io/skg17/tutordash2:latest
+        
+        env:
+        # SECURELY INJECT DB CREDS FOR MIGRATIONS
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: DB_PASS
+        - name: DATABASE_URL
+          value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+          
+        command: ["/bin/bash"]
+        args: ["-c", "bundle exec rake db:migrate"]
+
+      # 2. MAIN CONTAINERS RUN AFTER INIT CONTAINERS SUCCEED
       containers:
-        - name: app
-          # !! THIS LINE GETS UPDATED BY GITHUB ACTIONS !!
-          image: ghcr.io/skg17/tutordash2:latest # Placeholder image
-          env:
-            - name: RAILS_ENV
-              value: production # Ensure the environment is set correctly
-            - name: SECRET_KEY_BASE # Inject the required variable
-              valueFrom:
-                secretKeyRef:
-                  name: rails-secret-key # The name of the Secret created in Step B
-                  key: SECRET_KEY_BASE
-          ports:
-            - containerPort: 3000
-            - name: app
-              # !! THIS LINE GETS UPDATED BY GITHUB ACTIONS !!
-              image: ghcr.io/skg17/tutordash2:latest # Placeholder image
-              ports:
-                - containerPort: 3000
+      - name: app
+        image: ghcr.io/skg17/tutordash2:latest
+        
+        env:
+        # INJECT ALL REQUIRED ENVIRONMENT VARIABLES FOR THE APP
+        - name: RAILS_ENV
+          value: production
+          
+        - name: SECRET_KEY_BASE # Inject security key from K8s Secret
+          valueFrom:
+            secretKeyRef:
+              name: rails-secret-key
+              key: SECRET_KEY_BASE
+              
+        - name: DB_USERNAME # Re-inject DB user/pass
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: DB_PASS
+        - name: DATABASE_URL # Re-inject DATABASE_URL using secrets
+          value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+          
+        ports:
+          - containerPort: 3000
+          
+      # 3. IMAGESECRETS (Must be a sibling to containers/initContainers)
       imagePullSecrets:
-        - name: ghcr-login-secret
+      - name: ghcr-login-secret
