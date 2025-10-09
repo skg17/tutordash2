@@ -1,0 +1,30 @@
+<h1>All Students</h1>
+<div class="table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Year Group</th>
+            <th>Subjects</th>
+            <th>Current</th>
+            <th>Rate</th>
+            <th>Grade</th>
+            <th>Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @students.each do |student| %>
+            <tr>
+              <td><%= student.name %></td>
+              <td><%= student.year %></td>
+              <td><%= student.subjects %></td>
+              <td><%= student.current %></td>
+              <td><%= student.rate %></td>
+              <td><%= student.grade %></td>
+              <td><%= student.target %></td>
+              <td><%= button_to "Delete", student, method: :delete, data: { turbo_confirm: "Are you sure you want to delete this Student ?"} %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>

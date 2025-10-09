@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 end
 
 Rails.application.routes.draw do
- root 'lessons#index'
- resources :lessons, only: [:create, :new, :destroy]
+  root 'dashboards#index'
+
+  resources :students 
+  resources :lessons
 end

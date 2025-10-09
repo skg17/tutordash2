@@ -1,0 +1,26 @@
+<h1>Add Student</h1>
+<%= form_with(model: @student) do |form| %>
+    <div>
+        <%= form.label :name, "Name" %>
+        <%= form.text_field :name %>
+        <%= form.label :year, "Year Group" %>
+        <%= form.text_field :year %>
+        <%= form.label :subjects, "Subjects (separate with commas)" %>
+        <%= form.text_area :subjects %>
+        <%= form.label :rate, "Hourly Rate (£)" %>
+        <%= form.text_field :rate %>
+        <%= form.label :grade, "Working Grade" %>
+        <%= form.text_field :grade %>
+        <%= form.label :target, "Target Grade" %>
+        <%= form.text_field :target %>
+    </div>
+    <div>
+        <%= form.submit %>
+    </div>
+<% end %>
+
+<br>
+
+<div>
+    <%= link_to "Back to home", root_path %>
+</div>
