@@ -44,14 +44,15 @@ spec:
         # INJECT ALL REQUIRED ENVIRONMENT VARIABLES FOR THE APP
         - name: RAILS_ENV
           value: production
-          
+            
         - name: SECRET_KEY_BASE # Inject security key from K8s Secret
           valueFrom:
             secretKeyRef:
               name: rails-secret-key
               key: SECRET_KEY_BASE
-              
-        - name: DB_USERNAME # Re-inject DB user/pass
+                
+        # Re-inject DB user/pass for the main app container
+        - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
               name: postgres-credentials
@@ -63,7 +64,7 @@ spec:
               key: DB_PASS
         - name: DATABASE_URL # Re-inject DATABASE_URL using secrets
           value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
-          
+      
         ports:
           - containerPort: 3000
           
