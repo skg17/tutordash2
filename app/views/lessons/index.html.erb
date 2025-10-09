@@ -1,28 +1,101 @@
-<h1>All Lessons</h1>
-<div class="table">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Student</th>
-            <th>Duration</th>
-            <th>Subject</th>
-            <th>Paid</th>
-            <th>Homework</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @lessons.each do |lesson| %>
-            <tr>
-              <td><%= lesson.name %></td>
-              <td><%= lesson.date %></td>
-              <td><%= lesson.duration %></td>
-              <td><%= lesson.subject %></td>
-              <td><%= lesson.paid %></td>
-              <td><%= lesson.homework %></td>
-              <td><%= button_to "Delete", lesson, method: :delete, data: { turbo_confirm: "Are you sure you want to delete this Lesson ?"} %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+<!-- The content below will be yielded into the <main> tag of application.html.erb -->
+
+<!-- Page Header -->
+<section class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">Lessons</h1>
+        <p class="text-gray-500">Track and manage all your tutoring sessions.</p>
     </div>
+    <!-- Schedule Lesson Button -->
+    <%= link_to new_lesson_path, class: "flex items-center px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-700 transition duration-150" do %>
+        <div class="icon mr-2" data-lucide="plus" style="width: 20px; height: 20px;"></div>
+        Schedule Lesson
+    <% end %>
+</section>
+
+<!-- Lessons List Container -->
+<div class="space-y-4">
+    
+    <% @lessons.each do |lesson| %>
+        
+        <%
+            # --- Mocking dynamic properties and status for styling ---
+            # Replace this logic with your actual lesson status logic
+            status_text = case lesson.paid.to_s.downcase
+                          when 'true' then 'Upcoming'
+                          when 'false' then 'Scheduled'
+                          else 'Completed'
+                          end
+            status_class = "status-#{status_text.downcase}"
+            
+            # Determines button text/style
+            is_upcoming = status_text == 'Upcoming'
+            
+            # Content mapping assumptions:
+            # lesson.name is Subject/Topic (e.g., 'Mathematics - Calculus')
+            # lesson.subject is the Student's Name (e.g., 'Emma Wilson')
+            # lesson.date holds the date/time string
+        %>
+
+        <!-- Lesson Card -->
+        <div class="card-shadow bg-white p-6 rounded-2xl flex justify-between items-center border border-gray-100">
+            
+            <!-- Left/Middle Content -->
+            <div class="flex-1 min-w-0 pr-4">
+                <!-- Subject/Topic and Status Badge -->
+                <div class="flex items-center mb-3">
+                    <!-- Main Subject Name -->
+                    <h3 class="text-lg font-bold text-gray-900 truncate">
+                        <%= lesson.name %>
+                    </h3>
+                    <!-- Status Badge -->
+                    <span class="ml-3 px-3 py-1 text-xs font-semibold rounded-full <%= status_class %>">
+                        <%= status_text %>
+                    </span>
+                </div>
+
+                <!-- Student, Date, and Details -->
+                <div class="flex items-center text-sm text-gray-600 space-x-6">
+                    
+                    <!-- Student Name (Assuming lesson.subject is the student) -->
+                    <div class="flex items-center">
+                        <div class="icon mr-2 text-purple-600" data-lucide="user" style="width: 16px; height: 16px;"></div>
+                        <span><%= lesson.subject %></span>
+                    </div>
+                    
+                    <!-- Date and Time (Assuming lesson.date contains both) -->
+                    <div class="flex items-center">
+                        <div class="icon mr-2 text-purple-600" data-lucide="clock" style="width: 16px; height: 16px;"></div>
+                        <span><%= lesson.date %></span>
+                    </div>
+                    
+                    <!-- Location/Duration Badge (Using lesson.duration as proxy) -->
+                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+                        <%= lesson.duration %>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex flex-col space-y-2 ml-4 md:ml-0">
+                
+                <!-- View Details Button -->
+                <%= link_to "View Details", lesson_path(lesson), class: "px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
+
+                <!-- Start Session/Delete Button (Conditional) -->
+                <% if is_upcoming %>
+                    <%= link_to "Start Session", "#", class: "px-4 py-2 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-md hover:bg-purple-700 transition duration-150 text-center" %>
+                <% else %>
+                    <!-- Example of a non-upcoming lesson action (e.g., Delete or Review) -->
+                    <%= button_to "Delete", lesson, method: :delete, data: { turbo_confirm: "Are you sure?"}, class: "px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150 text-center" %>
+                <% end %>
+            </div>
+        </div>
+
+    <% end %>
+
+    <% if @lessons.empty? %>
+        <p class="text-center text-gray-500 py-10">No lessons scheduled yet. Click 'Schedule Lesson' to add one!</p>
+    <% end %>
+
+</div>

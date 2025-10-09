@@ -10,8 +10,9 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <!-- M3 Expressive Theme Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -20,10 +21,86 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <!-- Custom CSS for Sidebar and M3 Effects (Move this to application.css if preferred) -->
+    <style>
+        :root {
+            --sidebar-bg: #2C2A4A;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Utility for Lucide icon replacement */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
   </head>
 
   <body>
-    <%= render '/shared/navbar' %>
-    <%= yield %>
+    <!-- Main Wrapper: Flex container for Sidebar and Main Content -->
+    <div class="flex min-h-screen">
+        
+        <!-- 1. SIDEBAR (The Navigation Menu) -->
+        <%= render 'shared/sidebar' %>
+
+        <!-- 2. Mobile Overlay/Backdrop (Click to close menu) -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="window.toggleSidebar()"></div>
+
+        <!-- 3. Mobile Menu Button -->
+        <button id="menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-full bg-purple-600 text-white shadow-lg">
+            <div class="icon" data-lucide="menu" style="width: 24px; height: 24px;"></div>
+        </button>
+
+        <!-- 4. Main Content Area -->
+        <main class="flex-1 p-4 md:p-8 md:ml-64">
+            
+            <!-- Top Header Bar (Move this to a shared partial like _header.html.erb) -->
+            <header class="flex justify-between items-center mb-8">
+                <div class="text-gray-800">
+                    <h2 class="text-xl md:text-2xl font-semibold">Tutor Management System</h2>
+                </div>
+                <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold border-2 border-purple-500">
+                    JD
+                </div>
+            </header>
+
+            <!-- Page-specific content goes here -->
+            <%= yield %>
+        </main>
+    </div>
+
+    <!-- JavaScript for Mobile Sidebar Toggle and Icons (Place at end of body) -->
+    <script>
+        document.addEventListener('turbo:load', () => { // Use turbo:load for Turbo/Hotwire compatibility
+            const sidebar = document.getElementById('sidebar');
+            const menuButton = document.getElementById('menu-button');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            
+            // Function to toggle sidebar visibility on mobile
+            window.toggleSidebar = function() {
+                sidebar.classList.toggle('-translate-x-full');
+                backdrop.classList.toggle('hidden');
+            }
+
+            // Event listener for the menu button
+            menuButton.addEventListener('click', window.toggleSidebar);
+            
+            // Re-render Lucide icons after DOM is loaded/Turbo navigation
+            lucide.createIcons();
+        });
+    </script>
   </body>
 </html>
