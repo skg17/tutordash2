@@ -13,6 +13,7 @@ spec:
         app: tutordash
     spec:
       containers:
+<<<<<<< HEAD
       - name: app
         # !! THIS LINE GETS UPDATED BY GITHUB ACTIONS !!
         image: ghcr.io/skg17/tutordash2:latest # Placeholder image
@@ -26,5 +27,12 @@ spec:
               key: SECRET_KEY_BASE
         ports:
         - containerPort: 3000
+=======
+        - name: app
+          # !! THIS LINE GETS UPDATED BY GITHUB ACTIONS !!
+          image: ghcr.io/skg17/tutordash2:latest # Placeholder image
+          ports:
+            - containerPort: 3000
+>>>>>>> 03e04862d334a5c7c688c0d2c73e11bb754b96ed
       imagePullSecrets:
-      - name: ghcr-login-secret
+        - name: ghcr-login-secret
