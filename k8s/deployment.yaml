@@ -18,6 +18,11 @@ spec:
         image: ghcr.io/skg17/tutordash2:latest
         
         env:
+        - name: SECRET_KEY_BASE # Inject security key from K8s Secret
+          valueFrom:
+            secretKeyRef:
+              name: rails-secret-key
+              key: SECRET_KEY_BASE
         # SECURELY INJECT DB CREDS FOR MIGRATIONS
         - name: DB_USERNAME
           valueFrom:
