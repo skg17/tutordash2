@@ -36,8 +36,10 @@ spec:
                   key: DB_PASS
             - name: DATABASE_URL
               value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
-          command: ["/bin/bash"]
-          args: ["-c", "bundle exec rake db:create || true && bundle exec rake db:migrate"] # The migrations command
+          command: ["/bin/sh", "-c"] 
+          args: [
+            "echo 'Waiting for DB to be available...'; sleep 5; bundle exec rake db:create || true && bundle exec rake db:migrate"
+          ]
       # 2. MAIN CONTAINERS (Application)
       containers:
         - name: app
