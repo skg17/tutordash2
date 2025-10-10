@@ -43,9 +43,7 @@ spec:
         - name: app
           image: ghcr.io/skg17/tutordash2:latest
           command: ["/bin/sh", "-c"]
-          args: [
-            "bundle exec rails server -b 0.0.0.0 -p 3000"
-          ]
+          args: ["bundle exec rails server -b 0.0.0.0 -p 3000"]
           env:
             # INJECT ALL REQUIRED ENVIRONMENT VARIABLES FOR THE APP
             - name: RAILS_ENV
