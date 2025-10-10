@@ -57,3 +57,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "CI: Update deployment image to latest (${{ github.sha_short }})"
+          token: ${{ secrets.GITHUB_TOKEN }} 
