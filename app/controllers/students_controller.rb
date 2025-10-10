@@ -24,7 +24,7 @@ class StudentsController < ApplicationController
    private
 
    def student_params
-        permitted_params = params.require(:student).permit(:name, :year, :subjects, :current, :rate, :grade, :target)
+        permitted_params = params.require(:student).permit(:name, :year, :subjects, :current, :rate, :grade, :target, :parent_name, :email, :phone)
 
         # Handles list of subjects separated by commas
         if permitted_params[:subjects].is_a?(String)
