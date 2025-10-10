@@ -54,7 +54,10 @@ jobs:
             yq -i '.spec.template.spec.containers[0].image = "${{ steps.set_vars.outputs.IMAGE_TAG }}"' k8s/deployment.yaml
 
       - name: Commit and push manifest changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "CI: Update deployment image to latest (${{ github.sha_short }})"
-          token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          git config --global user.name 'GitHub Actions CI'
+          git config --global user.email 'ci@github.actions'
+          git add k8s/deployment.yaml
+          # Only commit if there are changes
+          git diff --staged --quiet || git commit -m "Update deployment image to ${{ github.sha }}"
+          git push # This command uses the token supplied in the checkout step
