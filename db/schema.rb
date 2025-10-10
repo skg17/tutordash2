@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_10_172051) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_10_181554) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,5 +35,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_10_172051) do
     t.decimal "rate", precision: 8, scale: 2
     t.string "grade"
     t.string "target"
+    t.string "parent_name"
+    t.string "email"
+    t.string "phone"
   end
 end
