@@ -40,24 +40,24 @@ spec:
         command: ["/bin/bash"]
         args: ["-c", "bundle exec rake db:migrate"]
 
-        - name: migrations
-          image: ghcr.io/skg17/tutordash2:latest
-          env:
-            # SECURELY INJECT DB CREDS FOR MIGRATIONS
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: DB_USER
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: DB_PASS
-            - name: DATABASE_URL
-              value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
-          command: ["/bin/bash"]
-          args: ["-c", "bundle exec rake db:migrate"]
+      - name: migrations
+        image: ghcr.io/skg17/tutordash2:latest
+        env:
+          # SECURELY INJECT DB CREDS FOR MIGRATIONS
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgres-credentials
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-credentials
+                key: DB_PASS
+          - name: DATABASE_URL
+            value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+        command: ["/bin/bash"]
+        args: ["-c", "bundle exec rake db:migrate"]
 
       # 2. MAIN CONTAINERS RUN AFTER INIT CONTAINERS SUCCEED
       containers:
