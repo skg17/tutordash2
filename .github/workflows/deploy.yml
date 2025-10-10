@@ -21,7 +21,7 @@ jobs:
           # This sets up the SSH environment for the subsequent Git push
           
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Use the SSH URL for cloning
           repository: skg17/tutordash2 # Explicitly define the repository path
