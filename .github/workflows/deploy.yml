@@ -55,23 +55,7 @@ jobs:
             yq -i '.spec.template.spec.containers[0].image = "${{ steps.set_vars.outputs.IMAGE_TAG }}"' k8s/deployment.yaml
 
       - name: Commit and push manifest changes
-        run: |
-          # 1. Configure the identity
-          git config --global user.name 'GitHub Actions CI'
-          git config --global user.email 'ci@github.actions'
-          
-          # 2. Add the modified file
-          git add k8s/deployment.yaml
-          
-          # 3. Check if there are actual changes to commit
-          if git diff --staged --quiet; then
-            echo "No changes detected in k8s/deployment.yaml. Skipping commit."
-            exit 0
-          fi
-          
-          # 4. Commit the changes
-          git commit -m "CI: Update deployment image to latest (${{ github.sha_short }})"
-          
-          # 5. CRITICAL: Push using the token URL (This ensures authentication!)
-          # The token is read from the 'GITHUB_TOKEN' secret
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "CI: Update deployment image to latest (${{ github.sha_short }})"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
