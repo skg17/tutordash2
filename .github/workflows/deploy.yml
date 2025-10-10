@@ -49,11 +49,12 @@ jobs:
             ghcr.io/${{ github.repository }}:latest
 
       - name: Update Kubernetes Image Tag to :latest
-        uses: mikefarah/yq@v4
         with:
           cmd: |
             # Set the image to the newly pushed :latest tag
-            yq -i ".spec.template.spec.containers[0].image = \"ghcr.io/${{ github.repository }}:${{ github.sha }}\"" k8s/deployment.yaml
+            NEW_TAG="ghcr.io/${{ github.repository }}:${{ github.sha }}"
+
+            sed -i "s|image: .*|image: $NEW_TAG|g" k8s/deployment.yaml
 
       - name: Commit and push manifest changes
         run: |
