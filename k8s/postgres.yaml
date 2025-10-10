@@ -12,6 +12,8 @@ spec:
       targetPort: 5432
   type: ClusterIP
 
+---
+
 # 2. PostgreSQL Deployment (The actual database running)
 apiVersion: apps/v1
 kind: Deployment
