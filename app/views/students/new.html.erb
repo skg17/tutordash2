@@ -48,12 +48,11 @@
             </div>
         </div>
         
-        <!-- Row 3: Grade Level and Subjects -->
+        <!-- Row 3: Year Group and Subjects -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <%= form.label :year, "Grade Level", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= form.label :year, "Year Group", class: "block text-sm font-medium text-gray-700 mb-2" %>
                 <div class="relative">
-                    <%# Using year for grade level, assuming year stores the grade (e.g., "Grade 10") %>
                     <%= form.select :year, options_for_select(['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13']), { prompt: "Select grade" }, class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white appearance-none pr-10 transition duration-150" %>
                     <div class="icon absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" data-lucide="chevron-down" style="width: 20px; height: 20px;"></div>
                 </div>

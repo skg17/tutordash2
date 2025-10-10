@@ -44,9 +44,9 @@
                     <h3 class="text-xl font-extrabold text-gray-900 mb-1">
                         <%= student.name %>
                     </h3>
-                    <!-- Grade/Subject (Using year and subjects as proxy) -->
+                    <!-- Year/Subject (Using year and subjects as proxy) -->
                     <p class="text-sm text-gray-600">
-                        Grade <%= student.year %> &middot; <%= student.subjects %>
+                        Year <%= student.year %> &middot; <%= student.subjects %>
                     </p>
                 </div>
                 <!-- Status Badge -->
@@ -60,12 +60,12 @@
                 <%# Assuming student.current is the email address %>
                 <div class="flex items-center">
                     <div class="icon mr-2 text-purple-600" data-lucide="mail" style="width: 16px; height: 16px;"></div>
-                    <span><%= student.current %></span>
+                    <span><%= student.email %></span>
                 </div>
                 <%# Assuming student.rate is the phone number %>
                 <div class="flex items-center">
                     <div class="icon mr-2 text-purple-600" data-lucide="phone" style="width: 16px; height: 16px;"></div>
-                    <span><%= student.rate %></span>
+                    <span><%= student.phone %></span>
                 </div>
             </div>
 
