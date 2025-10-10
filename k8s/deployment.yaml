@@ -14,67 +14,58 @@ spec:
     spec:
       # 1. INIT CONTAINERS (Migrations)
       initContainers:
-      - name: migrations
-        image: ghcr.io/skg17/tutordash2:latest
-        
-        env:
-        # Pass SECRET_KEY_BASE to avoid crashing during Rails environment load
-        - name: SECRET_KEY_BASE 
-          valueFrom:
-            secretKeyRef:
-              name: rails-secret-key
-              key: SECRET_KEY_BASE
-        
-        # SECURELY INJECT DB CREDS FOR MIGRATIONS
-        - name: DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: DB_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: DB_PASS
-        - name: DATABASE_URL
-          value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
-          
-        command: ["/bin/bash"]
-        args: ["-c", "bundle exec rake db:migrate"] # The migrations command
-
+        - name: migrations
+          image: ghcr.io/skg17/tutordash2:latest
+          env:
+            # Pass SECRET_KEY_BASE to avoid crashing during Rails environment load
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: rails-secret-key
+                  key: SECRET_KEY_BASE
+            # SECURELY INJECT DB CREDS FOR MIGRATIONS
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_PASS
+            - name: DATABASE_URL
+              value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+          command: ["/bin/bash"]
+          args: ["-c", "bundle exec rake db:migrate"] # The migrations command
       # 2. MAIN CONTAINERS (Application)
       containers:
-      - name: app
-        image: ghcr.io/skg17/tutordash2:latest
-        
-        env:
-        # INJECT ALL REQUIRED ENVIRONMENT VARIABLES FOR THE APP
-        - name: RAILS_ENV
-          value: production
-            
-        - name: SECRET_KEY_BASE
-          valueFrom:
-            secretKeyRef:
-              name: rails-secret-key
-              key: SECRET_KEY_BASE
-                
-        # Re-inject DB user/pass for the main app container
-        - name: DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: DB_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: DB_PASS
-        - name: DATABASE_URL 
-          value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
-          
-        ports:
-          - containerPort: 3000
-          
+        - name: app
+          image: ghcr.io/skg17/tutordash2:latest
+          env:
+            # INJECT ALL REQUIRED ENVIRONMENT VARIABLES FOR THE APP
+            - name: RAILS_ENV
+              value: production
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: rails-secret-key
+                  key: SECRET_KEY_BASE
+            # Re-inject DB user/pass for the main app container
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_PASS
+            - name: DATABASE_URL
+              value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+          ports:
+            - containerPort: 3000
       # 3. IMAGESECRETS
       imagePullSecrets:
-      - name: ghcr-login-secret
+        - name: ghcr-login-secret
