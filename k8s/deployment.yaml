@@ -24,18 +24,18 @@ spec:
                   name: rails-secret-key
                   key: SECRET_KEY_BASE
             # SECURELY INJECT DB CREDS FOR MIGRATIONS
-            - name: DB_USERNAME
+            - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: postgres-credentials
                   key: DB_USER
-            - name: DB_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgres-credentials
                   key: DB_PASS
             - name: DATABASE_URL
-              value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+              value: postgres://$(PGUSER):$(PGPASSWORD)@postgres-svc:5432/tutordash_production
           command: ["/bin/sh", "-c"] 
           args: [
             "echo 'Waiting for DB to be available...'; sleep 5; bundle exec rake db:create || true && bundle exec rake db:migrate"
@@ -54,18 +54,18 @@ spec:
                   name: rails-secret-key
                   key: SECRET_KEY_BASE
             # Re-inject DB user/pass for the main app container
-            - name: DB_USERNAME
+            - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: postgres-credentials
                   key: DB_USER
-            - name: DB_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgres-credentials
                   key: DB_PASS
             - name: DATABASE_URL
-              value: postgres://$(DB_USERNAME):$(DB_PASSWORD)@postgres-svc:5432/tutordash_production
+              value: postgres://$(PGUSER):$(PGPASSWORD)@postgres-svc:5432/tutordash_production
           ports:
             - containerPort: 3000
       # 3. IMAGESECRETS

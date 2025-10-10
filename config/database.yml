@@ -82,8 +82,8 @@ production:
   primary: &primary_production
     <<: *default
     database: tutordash_production
-    username: <%= ENV["DB_USER"] %> 
-    password: <%= ENV["DB_PASSWORD"] %> 
+    username: <%= ENV["PGUSER"] %> 
+    password: <%= ENV["PGPASSWORD"] %> 
 
     host: postgres-svc
     port: 5432
