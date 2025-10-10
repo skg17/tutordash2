@@ -48,13 +48,13 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
 
-      - name: Update Kubernetes Image Tag to :latest
-        with:
-          cmd: |
-            # Set the image to the newly pushed :latest tag
-            NEW_TAG="ghcr.io/${{ github.repository }}:${{ github.sha }}"
+      - name: Update Kubernetes Image Tag to SHA
+        run: |
+          # Set the image to the newly pushed :latest tag
+          NEW_TAG="ghcr.io/${{ github.repository }}:${{ github.sha }}"
+          sed -i "s|image: .*|image: $NEW_TAG|g" k8s/deployment.yaml
 
-            sed -i "s|image: .*|image: $NEW_TAG|g" k8s/deployment.yaml
+          echo "Manifest updated to image: $NEW_TAG"
 
       - name: Commit and push manifest changes
         run: |
