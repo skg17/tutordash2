@@ -19,11 +19,13 @@
             # --- Determining status based on date (Upcoming or Completed) ---
             if lesson.date && lesson.date > Time.current
                 status_text = 'Upcoming'
-                status_class = 'status-upcoming' # Assuming you map 'upcoming' to the purple/green status color
+                # Blue pill for Upcoming (Information/Scheduled)
+                status_class = 'bg-blue-100 text-blue-800 border border-blue-200'
                 is_upcoming = true
             else
                 status_text = 'Completed'
-                status_class = 'status-completed' # Assuming you map 'completed' to the gray/neutral status color
+                # Gray pill for Completed (Past/Archived)
+                status_class = 'bg-gray-100 text-gray-600 border border-gray-200'
                 is_upcoming = false
             end
         %>
