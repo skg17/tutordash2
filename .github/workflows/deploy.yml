@@ -13,11 +13,19 @@ jobs:
       packages: write # Allows pushing the image to ghcr
 
     steps:
+      - name: Configure SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          # Use the private key stored as a repository secret
+          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
+          # This sets up the SSH environment for the subsequent Git push
+          
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          # We need repo access to push the manifest change
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use the SSH URL for cloning
+          repository: skg17/tutordash2 # Explicitly define the repository path
+          ssh-key: ${{ secrets.SSH_DEPLOY_KEY }} # Authenticate checkout using the key
           fetch-depth: 0
 
       - name: Set up Docker Buildx
@@ -55,7 +63,20 @@ jobs:
             yq -i '.spec.template.spec.containers[0].image = "${{ steps.set_vars.outputs.IMAGE_TAG }}"' k8s/deployment.yaml
 
       - name: Commit and push manifest changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "CI: Update deployment image to latest (${{ github.sha_short }})"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Configure identity
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          
+          git add k8s/deployment.yaml
+          
+          if git diff --staged --quiet; then
+            echo "No manifest changes detected. Skipping commit."
+            exit 0
+          fi
+          
+          git commit -m "CI: Update deployment image to latest (${{ github.sha_short }})"
+          
+          # CRITICAL: Push using the SSH protocol URL
+          # Format: git@github.com:USER/REPO.git
+          git push git@github.com:${{ github.repository }}.git HEAD:main
