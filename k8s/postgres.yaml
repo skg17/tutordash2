@@ -1,0 +1,65 @@
+# 1. PostgreSQL Service (Creates the "postgres-svc" DNS entry)
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-svc
+  namespace: default
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP
+
+# 2. PostgreSQL Deployment (The actual database running)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: default
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14
+          ports:
+            - containerPort: 5432
+          env:
+            # Inject POSTGRES_USER from the K8s Secret
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials # Your K8s Secret name
+                  key: DB_USER              # Key used to store the username
+            
+            # Inject POSTGRES_PASSWORD from the K8s Secret
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials # Your K8s Secret name
+                  key: DB_PASS              # Key used to store the password
+                  
+            - name: POSTGRES_DB
+              value: tutordash_production
+              
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          # IMPORTANT: Use persistentVolumeClaim in a production cluster!
+          # For a homelab/testing, hostPath is simple:
+          hostPath: 
+            path: /mnt/data/postgres
+            type: DirectoryOrCreate
