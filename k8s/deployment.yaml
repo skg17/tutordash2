@@ -39,7 +39,7 @@ spec:
           command: ["/bin/sh", "-c"] 
           args: [
             "echo 'Waiting for DB to be available...'; sleep 5; bundle exec rake db:create || true && bundle exec rake db:migrate"
-          ]
+          ] # Add delay before DB connection
       # 2. MAIN CONTAINERS (Application)
       containers:
         - name: app
