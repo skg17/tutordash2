@@ -1,0 +1,47 @@
+<!-- app/views/sessions/new.html.erb -->
+<!-- This view assumes the 'auth' layout and uses the login_path for form submission -->
+<div class="auth-card">
+    <div class="logo-area text-center mb-6">
+        <!-- TutorDash logo/icon -->
+        <div class="inline-block p-3 rounded-xl bg-purple-600/10 mb-2">
+            <div class="icon text-purple-600" data-lucide="graduation-cap" style="width: 32px; height: 32px;"></div>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800">TutorDash</h1>
+        <p class="text-sm text-gray-500">Manage your tutoring business with ease</p>
+    </div>
+
+    <div class="auth-tabs p-1 bg-purple-100/50 rounded-xl mb-6 flex justify-between">
+        <!-- Active Login Tab -->
+        <span class="flex-1 text-center py-2 text-sm font-semibold rounded-lg bg-white shadow-sm text-purple-700">Login</span>
+        <!-- Link to Sign Up -->
+        <%= link_to "Sign Up", signup_path, class: "flex-1 text-center py-2 text-sm font-semibold text-gray-600 hover:text-purple-700 transition duration-150" %>
+    </div>
+
+    <h2 class="text-xl font-bold mb-4">Welcome</h2>
+    <p class="text-sm text-gray-500 mb-6">Sign in to your account or create a new one.</p>
+
+    <%# Display Login Errors (Flash alerts are often shown globally, but checking flash.now here is good practice) %>
+    <% if flash.alert %>
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg"><%= flash.alert %></div>
+    <% end %>
+
+    <%= form_with(url: login_path, local: true, class: "space-y-4") do |form| %>
+        
+        <!-- Email Field -->
+        <div>
+            <%= form.label :email, "Email", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.email_field :email, name: :email, placeholder: "tutor@example.com", required: true, class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white transition duration-150" %>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+            <%= form.label :password, "Password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.password_field :password, name: :password, placeholder: "********", required: true, class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white transition duration-150" %>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+            <%= form.submit "Sign In", class: "w-full py-3 text-lg font-semibold rounded-xl bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition duration-150 cursor-pointer" %>
+        </div>
+    <% end %>
+</div>
