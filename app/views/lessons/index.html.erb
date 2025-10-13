@@ -28,6 +28,16 @@
                 status_class = 'bg-gray-100 text-gray-600 border border-gray-200'
                 is_upcoming = false
             end
+
+            # --- Determining Payment Status (Paid or Unpaid) ---
+            if lesson.paid?
+                paid_text = 'Paid'
+                paid_class = 'bg-green-100 text-green-800 border border-green-200'
+            else
+                paid_text = 'Unpaid'
+                # Red/Orange pill for Unpaid (Warning/Action needed)
+                paid_class = 'bg-orange-100 text-orange-800 border border-orange-200'
+            end
         %>
 
         <!-- Lesson Card -->
@@ -42,9 +52,13 @@
                     <h3 class="text-lg font-bold text-gray-900 truncate">
                         <%= student_name %>
                     </h3>
-                    <!-- Status Badge -->
+                    <!-- Status and Payment Badge -->
                     <span class="ml-3 px-3 py-1 text-xs font-semibold rounded-full <%= status_class %>">
                         <%= status_text %>
+                    </span>
+
+                    <span class="ml-2 px-3 py-1 text-xs font-semibold rounded-full <%= paid_class %>">
+                        <%= paid_text %>
                     </span>
                 </div>
 
