@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_12_143558) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_13_110648) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_12_143558) do
     t.string "subject"
     t.boolean "paid"
     t.string "homework"
+    t.bigint "student_id", null: false
+    t.index ["student_id"], name: "index_lessons_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|
@@ -47,4 +49,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_12_143558) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "lessons", "students"
 end

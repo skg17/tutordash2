@@ -28,15 +28,35 @@
 
         <!-- Row 1: Student and Subject -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <%= form.label :name, "Student", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.text_field :name, class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white transition duration-150" %>
-            </div>
 
             <div>
-                <%= form.label :subject, "Subject", class: "block text-sm font-medium text-gray-700 mb-2" %>
-                <%= form.text_field :subject, placeholder: "e.g. Mathematics", class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white transition duration-150" %>
+                <%= form.label :student_id, "Student", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                
+                <div class="relative">
+                <%= form.collection_select(
+                    :student_id,
+                    @students,
+                    :id,
+                    :name,
+                    { prompt: "Select a Student" },
+                    {                        
+                        class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white appearance-none pr-10 transition duration-150",
+                        required: true,
+                        data: { 
+                            # Add a change listener to reload the 'subject_options' frame
+                            action: "change->lesson-form#updateSubjectOptions",
+                            # Give this field an ID to target it with JS
+                            controller: "lesson-form" 
+                        }
+                    }
+                ) %>
+                <div class="icon absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" data-lucide="chevron-down" style="width: 20px; height: 20px;"></div>
+                </div>
             </div>
+
+            <turbo-frame id="lesson_subject_field" data-current-student-id="<%= @lesson.student_id %>">
+            <%= render "lessons/subject_select", form: form, lesson: @lesson %>
+            </turbo-frame>
         </div>
 
         <!-- Row 2: Date/Time, Duration, and Paid Status -->

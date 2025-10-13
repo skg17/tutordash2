@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root 'dashboards#index'
 
-  # Health Check for deployment
-  get "up" => "rails/health#show", as: :rails_health_check
+  resources :students 
+  resources :lessons do
+    get :update_subjects, on: :collection 
+  end
 end
