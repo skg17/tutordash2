@@ -3,106 +3,64 @@
         <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">Lessons</h1>
         <p class="text-gray-500">Track and manage all your tutoring sessions.</p>
     </div>
-    <!-- Schedule Lesson Button -->
     <%= link_to new_lesson_path, class: "flex items-center px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-700 transition duration-150" do %>
         <div class="icon mr-2" data-lucide="plus" style="width: 20px; height: 20px;"></div>
         Schedule Lesson
     <% end %>
 </section>
 
-<!-- Lessons List Container -->
 <div class="space-y-4">
     
     <% @lessons.each do |lesson| %>
         
         <%
-            # --- Determining status based on date (Upcoming or Completed) ---
-            if lesson.date && lesson.date > Time.current
-                status_text = 'Upcoming'
-                # Blue pill for Upcoming (Information/Scheduled)
-                status_class = 'bg-blue-100 text-blue-800 border border-blue-200'
-                is_upcoming = true
-            else
-                status_text = 'Completed'
-                # Gray pill for Completed (Past/Archived)
-                status_class = 'bg-gray-100 text-gray-600 border border-gray-200'
-                is_upcoming = false
-            end
-
-            # --- Determining Payment Status (Paid or Unpaid) ---
-            if lesson.paid?
-                paid_text = 'Paid'
-                paid_class = 'bg-green-100 text-green-800 border border-green-200'
-            else
-                paid_text = 'Unpaid'
-                # Red/Orange pill for Unpaid (Warning/Action needed)
-                paid_class = 'bg-orange-100 text-orange-800 border border-orange-200'
-            end
-
-            # --- Determining Date + Lesson end time ---
-            if lesson.date.present? && lesson.duration.present?
-                # DD/MM/YYYY format
-                formatted_date = lesson.date.strftime("%d/%m/%Y")
-                # Start Time (e.g., 10:00 AM)
-                start_time = lesson.date.strftime("%H:%M") 
-                
-                # Calculate end time: add duration (in hours) to the start time
-                end_datetime = lesson.date + lesson.duration.hours
-                end_time = end_datetime.strftime("%H:%M")
-                
-                time_range = "#{start_time} - #{end_time}"
-            else
-                formatted_date = "N/A"
-                time_range = "N/A"
-            end
+            # 1. Calls the helper to get status and payment data
+            status_data = lesson_status_and_payment_data(lesson)
+            
+            # 2. Calls the helper to get formatted date and time
+            timing_data = format_lesson_timing(lesson)
         %>
 
-        <!-- Lesson Card -->
         <div class="card-shadow bg-white p-6 rounded-2xl flex justify-between items-center border border-gray-100">
             
-            <!-- Left/Middle Content -->
             <div class="flex-1 min-w-0 pr-4">
-                <!-- Subject/Topic and Status Badge -->
+                
                 <div class="flex items-center mb-3">
-                    <!-- Student Name -->
                     <% student_name = lesson.student&.name || "N/A" %>
                     <h3 class="text-lg font-bold text-gray-900 truncate">
                         <%= student_name %>
                     </h3>
-                    <!-- Status and Payment Badge -->
-                    <span class="ml-3 px-3 py-1 text-xs font-semibold rounded-full <%= status_class %>">
-                        <%= status_text %>
-                    </span>
 
-                    <span class="ml-2 px-3 py-1 text-xs font-semibold rounded-full <%= paid_class %>">
-                        <%= paid_text %>
-                    </span>
+                    <div class="flex items-center ml-3 space-x-2"> 
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full <%= status_data[:status_class] %>">
+                            <%= status_data[:status_text] %>
+                        </span>
+
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full <%= status_data[:paid_class] %>">
+                            <%= status_data[:paid_text] %>
+                        </span>
+                    </div>
                 </div>
 
-                <!-- Student, Date, and Details -->
                 <div class="flex items-center text-sm text-gray-600 space-x-6">
                     
-                    <!-- Subject Name (Assuming lesson.subject is the student) -->
                     <div class="flex items-center">
                         <div class="icon mr-2 text-purple-600" data-lucide="book-open" style="width: 16px; height: 16px;"></div>
                         <span><%= lesson.subject %></span>
                     </div>
                     
-                    <!-- Date and Time -->
                     <div class="flex items-center">
                         <div class="icon mr-2 text-purple-600" data-lucide="calendar" style="width: 16px; height: 16px;"></div>
-                        <span><%= formatted_date %></span>
+                        <span><%= timing_data[:formatted_date] %></span>
                     </div>
                     
                     <div class="flex items-center">
                         <div class="icon mr-2 text-purple-600" data-lucide="clock" style="width: 16px; height: 16px;"></div>
-                        <span><%= time_range %></span>
+                        <span><%= timing_data[:time_range] %></span>
                     </div>
-                    </span>
                 </div>
             </div>
 
-            <!-- Right Actions (Now using horizontal flex for Start/Delete) -->
             <div class="flex flex-col space-y-2 ml-4">
                 
                 <%= link_to "View Details", lesson_path(lesson), title: "See lesson details", class: "w-full px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
