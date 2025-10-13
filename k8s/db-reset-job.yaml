@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # The generateName ensures a new job is created each time the hook runs
+  generateName: rails-db-reset-
+  annotations:
+    # 1. ArgoCD Hook: Tell ArgoCD to run this as a PreSync hook
+    argocd.argoproj.io/hook: PreSync
+    # 2. Delete Policy: Delete the job resource after it successfully completes
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    # 3. Job Cleanup: Clean up the Job's Pods after it finishes
+    argocd.argoproj.io/job-cleanup: keep
+  labels:
+    app.kubernetes.io/instance: my-rails-app # Use your application's label
+spec:
+  template:
+    spec:
+      containers:
+      - name: db-reset-container
+        image: your-registry/your-rails-app-image:latest # Use your Rails app image
+        # The actual command to execute
+        command: ["/bin/bash", "-c"]
+        args:
+          # Run db:reset and allow it on any environment
+          - "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rails db:reset"
+        # Ensure database credentials are passed as environment variables
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: rails-db-secret # Your secret containing DB credentials
+                key: database_url
+      # Jobs should not be restarted indefinitely on failure, so set restartPolicy: Never
+      restartPolicy: Never
+  backoffLimit: 0 # Fail immediately if the job doesn't succeed
