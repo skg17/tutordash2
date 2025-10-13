@@ -38,6 +38,23 @@
                 # Red/Orange pill for Unpaid (Warning/Action needed)
                 paid_class = 'bg-orange-100 text-orange-800 border border-orange-200'
             end
+
+            # --- Determining Date + Lesson end time ---
+            if lesson.date.present? && lesson.duration.present?
+                # DD/MM/YYYY format
+                formatted_date = lesson.date.strftime("%d/%m/%Y")
+                # Start Time (e.g., 10:00 AM)
+                start_time = lesson.date.strftime("%H:%M") 
+                
+                # Calculate end time: add duration (in hours) to the start time
+                end_datetime = lesson.date + lesson.duration.hours
+                end_time = end_datetime.strftime("%H:%M")
+                
+                time_range = "#{start_time} - #{end_time}"
+            else
+                formatted_date = "N/A"
+                time_range = "N/A"
+            end
         %>
 
         <!-- Lesson Card -->
@@ -71,15 +88,16 @@
                         <span><%= lesson.subject %></span>
                     </div>
                     
-                    <!-- Date and Time (Assuming lesson.date contains both) -->
+                    <!-- Date and Time -->
                     <div class="flex items-center">
                         <div class="icon mr-2 text-purple-600" data-lucide="calendar" style="width: 16px; height: 16px;"></div>
-                        <span><%= lesson.date %></span>
+                        <span><%= formatted_date %></span>
                     </div>
                     
-                    <!-- Duration Badge -->
-                    <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-                        <%= lesson.duration %>
+                    <div class="flex items-center">
+                        <div class="icon mr-2 text-purple-600" data-lucide="clock" style="width: 16px; height: 16px;"></div>
+                        <span><%= time_range %></span>
+                    </div>
                     </span>
                 </div>
             </div>
