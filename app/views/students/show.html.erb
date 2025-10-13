@@ -1,0 +1,184 @@
+<%# 
+  File: app/views/students/show.html.erb 
+%>
+
+<%# Helper Calculations for display %>
+<%
+  # Get cleaned subjects (assuming you have a 'subjects' array or method)
+  subject_tags = (@student.subjects || []).map { |s| s.gsub(/["\[\]]/, '').strip.capitalize }
+  student_status_class = @student.current? ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+%>
+
+<section class="flex justify-between items-center mb-8">
+    
+    <div class="flex flex-col">
+        <%= link_to students_path, class: "flex items-center text-lg font-semibold text-gray-700 hover:text-purple-600 transition duration-150 mb-1" do %>
+            <div class="icon mr-2" data-lucide="arrow-left" style="width: 20px; height: 20px;"></div>
+            <span class="text-sm uppercase tracking-wider">Back to Students</span>
+        <% end %>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900"><%= @student.name %></h1>
+        <p class="text-gray-500 text-lg">Year <%= @student.year %></p>
+    </div>
+
+    <div class="flex space-x-3 mt-4 sm:mt-0">
+        <%= link_to edit_student_path(@student), class: "flex items-center px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 bg-white hover:bg-gray-100 transition duration-150" do %>
+            <div class="icon mr-2" data-lucide="edit" style="width: 16px; height: 16px;"></div>
+            Edit
+        <% end %>
+    </div>
+</section>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <div class="lg:col-span-1 space-y-8">
+        
+        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100 space-y-6">
+            
+            <%# --- Student Information Section --- %>
+            <div class="space-y-4 pb-4 border-b border-gray-100">
+                <div class="flex items-center">
+                    <div class="icon mr-3 text-purple-600" data-lucide="user-square" style="width: 20px; height: 20px;"></div>
+                    <h2 class="text-xl font-bold text-gray-900">Student Information</h2>
+                </div>
+
+                <%# 1. Row: Current Grade | Target Grade (2-column grid) %>
+                <div class="grid grid-cols-2 gap-3">
+                    
+                    <%# Current Grade %>
+                    <div class="p-3 rounded-lg bg-gray-50 flex items-center">
+                        <div class="icon mr-2 text-purple-600" data-lucide="trending-up" style="width: 20px; height: 20px;"></div>
+                        <div>
+                            <p class="text-xs text-gray-500">Current Grade</p>
+                            <p class="text-lg font-bold text-gray-900"><%= @student.grade %></p>
+                        </div>
+                    </div>
+
+                    <%# Target Grade %>
+                    <div class="p-3 rounded-lg bg-green-50 flex items-center">
+                        <div class="icon mr-2 text-green-700" data-lucide="target" style="width: 20px; height: 20px;"></div>
+                        <div>
+                            <p class="text-xs text-gray-500">Target Grade</p>
+                            <p class="text-lg font-bold text-gray-900"><%= @student.target %></p>
+                        </div>
+                    </div>
+                </div>
+
+                <%# 2. Row: Subjects and Status (2-column grid) %>
+                <div class="grid grid-cols-2 gap-3">
+                    
+                    <%# Subjects (Pill: py-1, font-medium) %>
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">Subjects</p>
+                        <%# Explicitly set line height to stabilize pill height %>
+                        <div class="flex flex-wrap gap-2 leading-none">
+                            <% subject_tags.each do |subject| %>
+                                <span class="px-3 py-1 text-sm font-medium rounded-full bg-purple-100 text-purple-800">
+                                    <%= subject %>
+                                </span>
+                            <% end %>
+                        </div>
+                    </div>
+
+                    <%# Status (Pill: py-1, font-medium) %>
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">Status</p>
+                        <%# 💥 FIX: Explicitly apply the same text-size class 💥 %>
+                        <div class="flex items-center"> 
+                            <span class="text-sm font-medium px-2 py-1 rounded-full <%= student_status_class %>">
+                                <%= @student.current? ? 'Active' : 'Inactive' %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <%# 3. Row: Hourly Rate (Full width) %>
+                <div>
+                    <p class="text-sm text-gray-500">Hourly Rate</p>
+                    <p class="font-semibold text-gray-900">£<%= '%.2f' % @student.rate %> / hr</p>
+                </div>
+            </div>
+            
+            <%# --- Parent Contact Information Section --- %>
+            <div class="space-y-4 pt-4">
+                <div class="flex items-center">
+                    <div class="icon mr-3 text-purple-600" data-lucide="users" style="width: 20px; height: 20px;"></div>
+                    <h2 class="text-xl font-bold text-gray-900">Parent Contact</h2>
+                </div>
+                
+                <p class="font-semibold text-gray-900"><%= @student.parent_name %></p>
+
+                <%# Email and Phone %>
+                <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-3 sm:space-y-0 text-gray-700">
+                    <div class="flex items-center">
+                        <div class="icon mr-2 text-purple-600" data-lucide="mail" style="width: 16px; height: 16px;"></div>
+                        <a href="mailto:<%= @student.email %>" class="text-sm hover:text-purple-600"><%= @student.email %></a>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="icon mr-2 text-purple-600" data-lucide="phone" style="width: 16px; height: 16px;"></div>
+                        <a href="tel:<%= @student.phone %>" class="text-sm hover:text-purple-600"><%= @student.phone %></a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-4">
+            
+            <div class="flex items-center">
+                <div class="icon mr-3 text-purple-600" data-lucide="calendar-check" style="width: 20px; height: 20px;"></div>
+                <h2 class="text-xl font-bold text-gray-900">Recent Lessons</h2>
+            </div>
+            
+            <% if @display_lessons.any? %>
+                <% @display_lessons.each do |lesson| %>
+                    <%
+                        # Determine status and class for each lesson card
+                        is_upcoming = lesson.date && lesson.date > Time.current
+                        status_text = is_upcoming ? 'Upcoming' : 'Completed'
+                        status_class = is_upcoming ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'
+                        
+                        start_time = lesson.date&.strftime("%H:%M")
+                        duration_text = lesson.duration.present? ? "#{lesson.duration} hour" : "N/A"
+                        
+                        # Prepare homework display
+                        homework_summary = lesson.homework.present? ? lesson.homework.truncate(30, omission: '...') : "No homework assigned."
+                    %>
+                    
+                    <%# Lesson List Item %>
+                    <%= link_to lesson_path(lesson), class: "flex justify-between items-center p-4 bg-white rounded-xl border border-gray-100 hover:border-purple-300 transition duration-150" do %>
+                        
+                        <div class="flex-1 min-w-0 pr-4">
+                            
+                            <div class="flex items-center mb-1 space-x-3">
+                                <div class="flex items-center space-x-2">
+                                    <div class="icon text-purple-600" data-lucide="book" style="width: 18px; height: 18px;"></div>
+                                    <p class="font-semibold text-gray-900"><%= lesson.subject %></p>
+                                </div>
+                                
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full <%= status_class %>">
+                                    <%= status_text %>
+                                </span>
+                            </div>
+                            
+                            <p class="text-sm text-gray-600">
+                                <%= lesson.date&.strftime("%b %-d, %Y") %> &bull; <%= start_time %> &bull; <%= duration_text %>
+                            </p>
+                        </div>
+                        
+                        <div class="text-right ml-4 min-w-[150px] max-w-[200px]">
+                            <p class="text-xs font-semibold text-gray-500 mb-1">Homework:</p>
+                            <p class="text-xs italic text-gray-700 truncate" title="<%= lesson.homework %>">
+                                <%= homework_summary %>
+                            </p>
+                        </div>
+
+                    <% end %>
+                <% end %>
+            <% else %>
+                <p class="text-gray-500 p-4">No lessons recorded for <%= @student.name %> yet.</p>
+            <% end %>
+        </div>
+    </div>
+</div>
