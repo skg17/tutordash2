@@ -3,7 +3,17 @@ class LessonsController < ApplicationController
     before_action :set_students, only: [:new, :create] 
 
     def index
-        @lessons = Lesson.all
+        # We use Arel/SQL to sort by two criteria:
+        # 1. 'is_completed': 1 if completed (past date), 0 if upcoming (future date).
+        #    Sorting by this ASC (0 then 1) pushes completed lessons to the bottom.
+        # 2. 'date': Orders upcoming lessons chronologically, and past lessons chronologically.
+        
+        status_order = Arel.sql("CASE WHEN date > NOW() THEN 0 ELSE 1 END")
+
+        @lessons = Lesson.unscoped
+                        .includes(:student) # Keep this for performance
+                        .order(status_order)
+                        .order(date: :asc) # Sorts by ascending date (oldest upcoming first)
     end
 
     def new
@@ -38,6 +48,11 @@ class LessonsController < ApplicationController
       # This replaces the content of the frame in the view
       render partial: 'lessons/subject_select', locals: { form: nil, lesson: @lesson }
     end
+
+    def show
+        @lesson = Lesson.includes(:student).find(params[:id])
+    end
+
 
     private
 
