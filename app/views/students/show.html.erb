@@ -31,21 +31,21 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     
-    <div class="lg:col-span-1 space-y-8">
+    <div class="lg:col-span-1">
         
-        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100 space-y-6">
+        <%# UNIFIED CARD: Student Info, Contact, and Homework/Notes %>
+        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100">
             
-            <%# --- Student Information Section --- %>
-            <div class="space-y-4 pb-4 border-b border-gray-100">
+            <%# --- 1. Student Information Section --- %>
+            <div class="space-y-4">
                 <div class="flex items-center">
                     <div class="icon mr-3 text-purple-600" data-lucide="user-square" style="width: 20px; height: 20px;"></div>
                     <h2 class="text-xl font-bold text-gray-900">Student Information</h2>
                 </div>
 
-                <%# 1. Row: Current Grade | Target Grade (2-column grid) %>
+                <%# Grades, Subjects, Rate %>
+                <%# Grades %>
                 <div class="grid grid-cols-2 gap-3">
-                    
-                    <%# Current Grade %>
                     <div class="p-3 rounded-lg bg-gray-50 flex items-center">
                         <div class="icon mr-2 text-purple-600" data-lucide="trending-up" style="width: 20px; height: 20px;"></div>
                         <div>
@@ -53,8 +53,6 @@
                             <p class="text-lg font-bold text-gray-900"><%= @student.grade %></p>
                         </div>
                     </div>
-
-                    <%# Target Grade %>
                     <div class="p-3 rounded-lg bg-green-50 flex items-center">
                         <div class="icon mr-2 text-green-700" data-lucide="target" style="width: 20px; height: 20px;"></div>
                         <div>
@@ -64,13 +62,10 @@
                     </div>
                 </div>
 
-                <%# 2. Row: Subjects and Status (2-column grid) %>
+                <%# Subjects and Status %>
                 <div class="grid grid-cols-2 gap-3">
-                    
-                    <%# Subjects (Pill: py-1, font-medium) %>
                     <div>
                         <p class="text-sm text-gray-500 mb-1">Subjects</p>
-                        <%# Explicitly set line height to stabilize pill height %>
                         <div class="flex flex-wrap gap-2 leading-none">
                             <% subject_tags.each do |subject| %>
                                 <span class="px-3 py-1 text-sm font-medium rounded-full bg-purple-100 text-purple-800">
@@ -79,11 +74,8 @@
                             <% end %>
                         </div>
                     </div>
-
-                    <%# Status (Pill: py-1, font-medium) %>
                     <div>
                         <p class="text-sm text-gray-500 mb-1">Status</p>
-                        <%# 💥 FIX: Explicitly apply the same text-size class 💥 %>
                         <div class="flex items-center"> 
                             <span class="text-sm font-medium px-2 py-1 rounded-full <%= student_status_class %>">
                                 <%= @student.current? ? 'Active' : 'Inactive' %>
@@ -92,15 +84,17 @@
                     </div>
                 </div>
 
-                <%# 3. Row: Hourly Rate (Full width) %>
+                <%# Hourly Rate %>
                 <div>
                     <p class="text-sm text-gray-500">Hourly Rate</p>
                     <p class="font-semibold text-gray-900">£<%= '%.2f' % @student.rate %> / hr</p>
                 </div>
             </div>
             
-            <%# --- Parent Contact Information Section --- %>
-            <div class="space-y-4 pt-4">
+            <div class="my-6 border-t border-gray-100"></div>
+
+            <%# --- 2. Parent Contact Information Section --- %>
+            <div class="space-y-4">
                 <div class="flex items-center">
                     <div class="icon mr-3 text-purple-600" data-lucide="users" style="width: 20px; height: 20px;"></div>
                     <h2 class="text-xl font-bold text-gray-900">Parent Contact</h2>
@@ -119,6 +113,47 @@
                         <a href="tel:<%= @student.phone %>" class="text-sm hover:text-purple-600"><%= @student.phone %></a>
                     </div>
                 </div>
+            </div>
+            
+            <div class="my-6 border-t border-gray-100"></div>
+
+            <%# --- 3. Recent Homework/Notes Section --- %>
+            <div class="space-y-4">
+                <div class="flex items-center">
+                    <div class="icon mr-3 text-purple-600" data-lucide="notebook-pen" style="width: 20px; height: 20px;"></div>
+                    <h2 class="text-xl font-bold text-gray-900">Homework and Notes</h2>
+                </div>
+
+                <% if @recent_lessons.any? %>
+                    <% @recent_lessons.first(3).each do |lesson| %>
+                        <% timing_data = format_lesson_timing(lesson) %>
+                        
+                        <div class="space-y-1 pt-2">
+                            
+                            <%# Date | Subject Header %>
+                            <div class="flex items-center text-sm font-semibold text-gray-700 space-x-3">
+                                <div class="flex items-center">
+                                    <div class="icon mr-1 text-purple-600" data-lucide="calendar" style="width: 14px; height: 14px;"></div>
+                                    <span><%= timing_data[:formatted_date] %></span>
+                                </div>
+
+                                <%# The space-x-3 on the parent handles the gap %>
+                                
+                                <div class="flex items-center">
+                                    <div class="icon mr-1 text-purple-600" data-lucide="book" style="width: 14px; height: 14px;"></div>
+                                    <span><%= lesson.subject %></span>
+                                </div>
+                            </div>
+
+                            <%# Homework/Notes Content %>
+                            <p class="text-sm text-gray-600 italic leading-snug">
+                                <%= lesson.homework.present? ? lesson.homework.truncate(100) : "No notes or homework recorded." %>
+                            </p>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <p class="text-gray-500 text-sm py-2">No recent completed lessons found.</p>
+                <% end %>
             </div>
             
         </div>
