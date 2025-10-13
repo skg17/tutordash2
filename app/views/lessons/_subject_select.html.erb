@@ -1,0 +1,39 @@
+<turbo-frame id="lesson_subject_field">
+  <%
+    student = Student.find_by(id: lesson.student_id)
+    raw_subjects = student&.subjects || []
+    
+    # Clean up and format the subject strings
+    formatted_subjects = raw_subjects.map do |subject|
+      # 1. Clean up brackets, quotes, and whitespace
+      cleaned_subject = subject.gsub(/["\[\]]/, '').strip
+      
+      # 2. Capitalise the first letter for proper display ("english" -> "English")
+      cleaned_subject.capitalize
+    end
+  %>
+  
+  <div>
+      <label for="lesson_subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+      
+      <div class="relative">
+        <%= select_tag(
+            "lesson[subject]", 
+            # Use the cleaned, formatted array for the options
+            options_for_select(formatted_subjects, lesson.subject), 
+            { 
+              prompt: "Select Subject",
+              class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white appearance-none pr-10 transition duration-150",
+              id: "lesson_subject",
+              disabled: student.nil? || formatted_subjects.empty?, 
+              required: true
+            }
+        ) %>
+        <div class="icon absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" data-lucide="chevron-down" style="width: 20px; height: 20px;"></div>
+      </div>
+      
+      <% if student.nil? %>
+          <p class="text-xs text-red-500 mt-1">Please select a student first.</p>
+      <% end %>
+  </div>
+</turbo-frame>

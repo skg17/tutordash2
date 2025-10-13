@@ -17,5 +17,7 @@ Rails.application.routes.draw do
   root 'dashboards#index'
 
   resources :students 
-  resources :lessons
+  resources :lessons do
+    get :update_subjects, on: :collection 
+  end
 end

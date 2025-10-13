@@ -24,7 +24,20 @@ class LessonsController < ApplicationController
     def destroy
         Lesson.find(params[:id]).destroy
         redirect_to lessons_path
-    end   
+    end
+
+    def update_subjects
+      # Find the student based on the ID passed from the form
+      @student = Student.find_by(id: params[:student_id])
+      
+      # Prepare a lesson instance to pass to the partial
+      # We use .new to pass a non-persisted lesson to the partial
+      @lesson = Lesson.new(student_id: @student.id) 
+      
+      # Render the partial within the 'lesson_subject_field' Turbo Frame
+      # This replaces the content of the frame in the view
+      render partial: 'lessons/subject_select', locals: { form: nil, lesson: @lesson }
+    end
 
     private
 
