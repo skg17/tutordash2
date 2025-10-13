@@ -1,0 +1,106 @@
+<%# 
+  Locals: 
+    lesson: The @lesson instance (used for form_with and values)
+    students: The @students collection (used for dropdown)
+    allow_student_edit: Boolean flag (defaults to true for new form)
+%>
+<% allow_student_edit = local_assigns.fetch(:allow_student_edit, true) %>
+
+<div class="card-shadow bg-white p-6 md:p-10 rounded-3xl border border-gray-100 max-w-3xl mx-auto">
+
+    <div class="flex items-center mb-8 pb-4 border-b border-gray-100">
+        <div class="icon mr-3 text-purple-600" data-lucide="<%= allow_student_edit ? 'plus' : 'edit' %>" style="width: 24px; height: 24px;"></div>
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">Lesson Details</h2>
+            <p class="text-sm text-gray-500"><%= allow_student_edit ? 'Fill in the lesson information' : 'Modify the lesson information' %></p>
+        </div>
+    </div>
+
+    <%= form_with(model: lesson, class: "space-y-6") do |form| %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <% if allow_student_edit %>
+                <div>
+                    <%= form.label :student_id, "Student", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    
+                    <div class="relative">
+                    <%= form.collection_select(
+                        :student_id,
+                        students,
+                        :id,
+                        :name,
+                        { prompt: "Select a Student" },
+                        {                        
+                            class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white appearance-none pr-10 transition duration-150",
+                            required: true,
+                            data: { 
+                                action: "change->lesson-form#updateSubjectOptions",
+                                controller: "lesson-form" 
+                            }
+                        }
+                    ) %>
+                    <div class="icon absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" data-lucide="chevron-down" style="width: 20px; height: 20px;"></div>
+                    </div>
+                </div>
+
+            <% else %>
+                <div>
+                    <%= form.label :student_id, "Student", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    
+                    <p class="w-full p-3 border-none rounded-xl bg-gray-100 text-gray-800 font-semibold">
+                        <%= lesson.student&.name %>
+                    </p>
+                    
+                    <%= form.hidden_field :student_id %>
+                </div>
+            <% end %>
+
+
+            <turbo-frame id="lesson_subject_field" data-current-student-id="<%= lesson.student_id %>">
+            <%= render "lessons/subject_select", form: form, lesson: lesson %>
+            </turbo-frame>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <%= form.label :date, "Date & Time", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <div class="relative flex items-center">
+                    <%= form.datetime_field :date, class: "w-full p-3 pr-10 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white transition duration-150" %>
+                    <div class="icon absolute right-3 text-gray-500 pointer-events-none" data-lucide="clock" style="width: 20px; height: 20px;"></div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4">
+                
+                <div class="relative col-span-2">
+                    <%= form.label :duration, "Duration", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    <%= form.select :duration, [['60 Minutes', 1], ['90 Minutes', 1.5], ['120 Minutes', 2]], { prompt: "Select duration" }, class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white appearance-none pr-10 transition duration-150" %>
+                    <div class="icon absolute right-3 top-[calc(50%+16px)] -translate-y-1/2 text-gray-500 pointer-events-none" data-lucide="chevron-down" style="width: 20px; height: 20px;"></div>
+                </div>
+                
+                <div class="relative col-span-1">
+                    <%= form.label :paid, "Paid", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    <%= form.select :paid, [['Yes', true], ['No', false]], { prompt: "Select" }, class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white appearance-none pr-8 transition duration-150" %>
+                    <div class="icon absolute right-3 top-[calc(50%+16px)] -translate-y-1/2 text-gray-500 pointer-events-none" data-lucide="chevron-down" style="width: 18px; height: 18px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <%= form.label :homework, "Homework / Notes", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.text_area :homework, placeholder: "Enter homework assigned or any notes for the lesson...", class: "w-full p-3 border-none rounded-xl bg-purple-100/50 text-gray-800 focus:ring-2 focus:ring-purple-500 focus:bg-white transition duration-150 h-24 resize-none" %>
+        </div>
+        
+        <div class="pt-6 border-t border-gray-100"></div>
+
+        <div class="flex justify-end space-x-4">
+
+            <%= link_to "Cancel", lessons_path, class: "px-6 py-3 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
+
+            <%= form.submit allow_student_edit ? "Schedule Lesson" : "Update Lesson", class: "px-6 py-3 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition duration-150 cursor-pointer" %>
+        </div>
+
+    <% end %>
+
+</div>
