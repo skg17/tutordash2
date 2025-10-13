@@ -1,6 +1,7 @@
 class LessonsController < ApplicationController
     # Call set_students before the new and create actions
-    before_action :set_students, only: [:new, :create] 
+    before_action :set_students, only: [:new, :create]
+    before_action :set_lesson, only: [:show, :edit, :update, :destroy]
 
     def index
         # We use Arel/SQL to sort by two criteria:
@@ -31,8 +32,20 @@ class LessonsController < ApplicationController
         end
     end
 
+    def edit
+        # @lesson is now set by the before_action :set_lesson
+    end
+
+    def update
+        if @lesson.update(lesson_params)
+            redirect_to @lesson, notice: 'Lesson was successfully updated.'
+        else
+            render :edit, status: :unprocessable_entity
+        end
+    end
+
     def destroy
-        Lesson.find(params[:id]).destroy
+        @lesson.destroy
         redirect_to lessons_path
     end
 
@@ -50,15 +63,18 @@ class LessonsController < ApplicationController
     end
 
     def show
-        @lesson = Lesson.includes(:student).find(params[:id])
+        # @lesson is now set by the before_action :set_lesson
     end
 
 
     private
 
-    # Load all students
     def set_students
       @students = Student.all
+    end
+
+    def set_lesson
+        @lesson = Lesson.includes(:student).find(params[:id]) 
     end
 
     def lesson_params

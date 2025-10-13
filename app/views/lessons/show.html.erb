@@ -31,10 +31,24 @@
         
     </div>
 
-    <div class="flex space-x-3 mt-4 sm:mt-0">
-        <%= link_to "Edit", edit_lesson_path(@lesson), class: "px-6 py-3 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
+    <div class="pt-6 border-t border-gray-100 flex justify-end space-x-4">
+        <%= button_to @lesson, method: :delete, data: { turbo_confirm: "Are you sure you want to permanently delete this lesson?"}, 
+             form_class: "inline-block", # Fixes outer form alignment
+             class: "flex items-center px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150" do %>
+            <div class="icon mr-2" data-lucide="trash-2" style="width: 16px; height: 16px;"></div>
+            Delete
+        <% end %>
+
+        <%= link_to edit_lesson_path(@lesson), class: "flex items-center px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150" do %>
+            <div class="icon mr-2" data-lucide="edit" style="width: 16px; height: 16px;"></div>
+            Edit
+        <% end %>
+
+        <%= link_to "#", class: "flex items-center px-6 py-2 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition duration-150" do %>
+            <div class="icon mr-2" data-lucide="video" style="width: 16px; height: 16px;"></div>
+            Join
+        <% end %>
         
-        <%= link_to "Start Session", "#", class: "px-6 py-3 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition duration-150" %>
     </div>
 </section>
 
