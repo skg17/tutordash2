@@ -1,29 +1,39 @@
 class LessonsController < ApplicationController
-   def index
-       @lessons = Lesson.all
-   end
+    # Call set_students before the new and create actions
+    before_action :set_students, only: [:new, :create] 
 
-   def new
+    def index
+        @lessons = Lesson.all
+    end
+
+    def new
         @lesson = Lesson.new()
-   end
+    end
 
-   def create
+    def create
         @lesson = Lesson.new(lesson_params)
         if @lesson.save
            redirect_to lessons_path
         else
-            render :new
+            # If save fails (validation errors), we render :new
+            # The before_action ensures @students is available when :new is rendered
+            render :new, status: :unprocessable_entity 
         end
-   end
+    end
 
-   def destroy
-       Lesson.find(params[:id]).destroy
-       redirect_to lessons_path
-   end   
+    def destroy
+        Lesson.find(params[:id]).destroy
+        redirect_to lessons_path
+    end   
 
-   private
+    private
 
-   def lesson_params
-        params.require(:lesson).permit(:name, :date, :duration, :paid, :subject, :homework)
-   end
+    # Load all students
+    def set_students
+      @students = Student.all
+    end
+
+    def lesson_params
+        params.require(:lesson).permit(:student_id, :date, :duration, :paid, :subject, :homework)
+    end
 end
