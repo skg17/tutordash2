@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "TutorTrack | Auth" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <style>
+      /* Custom styles for the centered authentication layout */
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fc; /* Light background */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Aligns content near the top */
+        min-height: 100vh;
+        padding-top: 5rem; /* Space from top */
+      }
+      .auth-card {
+        max-width: 400px;
+        width: 100%;
+        background-color: white;
+        padding: 2.5rem;
+        border-radius: 2rem; /* Deeply rounded corners */
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      /* Fix for Lucide icon display */
+      .icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <%# Global flash messages %>
+    <% if flash.any? %>
+      <div class="fixed top-0 left-1/2 transform -translate-x-1/2 p-3 z-50 rounded-b-lg shadow-lg <%= flash[:notice] ? 'bg-green-500' : 'bg-red-500' %> text-white text-sm">
+        <%= flash[:notice] || flash[:alert] %>
+      </div>
+    <% end %>
+
+    <%= yield %>
+
+    <script>
+        document.addEventListener('turbo:load', () => {
+            lucide.createIcons();
+        });
+    </script>
+  </body>
+</html>
