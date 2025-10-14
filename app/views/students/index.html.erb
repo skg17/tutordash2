@@ -1,101 +1,86 @@
-<!-- The content below will be yielded into the <main> tag of application.html.erb -->
-
-<!-- Page Header -->
 <section class="flex justify-between items-center mb-8">
     <div>
         <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">Students</h1>
         <p class="text-gray-500">Manage your student roster.</p>
     </div>
-    <!-- Add Student Button -->
     <%= link_to new_student_path, class: "flex items-center px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-700 transition duration-150" do %>
         <div class="icon mr-2" data-lucide="user-plus" style="width: 20px; height: 20px;"></div>
         Add Student
     <% end %>
 </section>
 
-<!-- Students Grid Container -->
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     
     <% @students.each do |student| %>
         
         <%
-            # --- Mocking dynamic properties for card display ---
-            # Replace these with real logic from your Student model!
-            
-            # Status (Active/Inactive)
+            # --- Dynamic properties and data processing ---
             is_active = student.current.to_s.downcase == 'true'
             status_text = is_active ? 'Active' : 'Inactive'
-            status_class = is_active ? 'bg-green-500' : 'bg-red-500'
+            status_class = is_active ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'
             
-            # Mocking Next Lesson Info (You'll need to fetch this in your controller)
             next_lesson_date = student.grade.to_i.even? ? "Today, 10:00 AM" : "Not scheduled"
             total_lessons = student.year.to_i * 3
-            
-            # Assuming student.subjects holds the main subject (e.g., "Mathematics")
+
+            cleaned_subjects = (student.subjects || []).is_a?(Array) ? student.subjects : student.subjects.to_s.gsub(/["\[\]]/, '').split(',').map(&:strip)
+
+            subject_list_display = cleaned_subjects.map(&:capitalize).join(', ')
         %>
 
-        <!-- Student Card -->
         <div class="card-shadow bg-white p-6 rounded-2xl flex flex-col justify-between border border-gray-100">
             
-            <!-- Top Section: Name, Grade/Subject, Status -->
             <div class="flex justify-between items-start mb-4">
                 <div>
-                    <!-- Student Name -->
                     <h3 class="text-xl font-extrabold text-gray-900 mb-1">
                         <%= student.name %>
                     </h3>
-                    <!-- Year/Subject (Using year and subjects as proxy) -->
-                    <p class="text-sm text-gray-600">
-                        Year <%= student.year %> &middot; <%= student.subjects %>
-                    </p>
+                    
+                    <div class="flex items-center text-sm text-gray-600 flex-wrap gap-x-3 gap-y-1">
+                        
+                        <%# Year Group %>
+                        <div class="flex items-center">
+                            <div class="icon mr-1 text-purple-600" data-lucide="graduation-cap" style="width: 16px; height: 16px;"></div>
+                            <span class="font-medium">Year <%= student.year %></span>
+                        </div>
+
+                        <%# Subjects List %>
+                        <div class="flex items-center">
+                            <div class="icon mr-1 text-purple-600" data-lucide="book" style="width: 16px; height: 16px;"></div>
+                            <span><%= subject_list_display %></span>
+                        </div>
+                    </div>
                 </div>
-                <!-- Status Badge -->
-                <span class="px-3 py-1 text-xs font-semibold rounded-full text-white <%= status_class %> shadow-sm">
+                
+                <span class="px-3 py-1 text-xs font-semibold rounded-full <%= status_class %> shadow-sm">
                     <%= status_text %>
                 </span>
             </div>
 
-            <!-- Contact Info -->
             <div class="space-y-2 mb-6 text-sm text-gray-700">
-                <%# Assuming student.current is the email address %>
                 <div class="flex items-center">
                     <div class="icon mr-2 text-purple-600" data-lucide="mail" style="width: 16px; height: 16px;"></div>
                     <span><%= student.email %></span>
                 </div>
-                <%# Assuming student.rate is the phone number %>
                 <div class="flex items-center">
                     <div class="icon mr-2 text-purple-600" data-lucide="phone" style="width: 16px; height: 16px;"></div>
                     <span><%= student.phone %></span>
                 </div>
             </div>
 
-            <!-- Stats Bar (Total Lessons & Next Lesson) -->
             <div class="flex space-x-4 mb-6">
-                
-                <!-- Total Lessons Stat -->
                 <div class="flex-1 bg-purple-50 p-3 rounded-xl text-center shadow-inner">
                     <p class="text-xl font-bold text-purple-800"><%= total_lessons %></p>
                     <p class="text-xs text-purple-600">Total Lessons</p>
                 </div>
-                
-                <!-- Next Lesson Stat -->
                 <div class="flex-1 bg-green-50 p-3 rounded-xl text-center shadow-inner">
                     <p class="text-md font-semibold text-green-700"><%= next_lesson_date %></p>
                     <p class="text-xs text-green-600">Next Lesson</p>
                 </div>
             </div>
 
-            <!-- Actions (Using equal-width buttons like in the Lessons index) -->
             <div class="flex space-x-3 pt-4 border-t border-gray-100">
-                
-                <!-- View Details Button -->
                 <%= link_to "View Details", student_path(student), class: "flex-1 px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150 text-center" %>
-
-                <!-- Schedule Lesson Button -->
                 <%= link_to "Schedule Lesson", new_lesson_path(student_id: student.id), class: "flex-1 px-4 py-2 text-sm font-semibold rounded-xl bg-purple-600 text-white shadow-md hover:bg-purple-700 transition duration-150 text-center" %>
-
-                <%# I've omitted the "Delete" button from the main card flow to match the image, 
-                    but you can place it here or on the details page. %>
             </div>
         </div>
         
@@ -106,5 +91,4 @@
             <p class="text-center text-gray-500 py-10">No students found. Click 'Add Student' to begin!</p>
         </div>
     <% end %>
-
 </div>
