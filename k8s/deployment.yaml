@@ -15,7 +15,7 @@ spec:
       # 1. INIT CONTAINERS (Migrations)
       initContainers:
         - name: migrations
-          image: ghcr.io/skg17/tutordash2:07ba0ab7a678563a1712998c6940348d6d59564a
+          image: ghcr.io/skg17/tutordash2:336a2d07354bc46b79501c7c4329e5df1bb9a463
           env:
             # Pass SECRET_KEY_BASE to avoid crashing during Rails environment load
             - name: SECRET_KEY_BASE
@@ -41,7 +41,7 @@ spec:
       # 2. MAIN CONTAINERS (Application)
       containers:
         - name: app
-          image: ghcr.io/skg17/tutordash2:07ba0ab7a678563a1712998c6940348d6d59564a
+          image: ghcr.io/skg17/tutordash2:336a2d07354bc46b79501c7c4329e5df1bb9a463
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args: ["bundle exec rails server -b 0.0.0.0 -p 3000"]
