@@ -1,27 +1,21 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # --- Authentication Routes ---
-  # Sign Up (Users#new, Users#create)
+  # Authentication Routes
   get 'signup', to: 'users#new', as: :signup
-  resources :users, only: [:create] # Handles the POST request from the sign up form
-
-  # Login/Logout (Sessions#new, Sessions#create, Sessions#destroy)
+  resources :users, only: [:create]
   get 'login', to: 'sessions#new', as: :login
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy', as: :logout
-  # -----------------------------
 
   # Application Resources
+  # Lessons: Define the collection route first to avoid ID conflict
+  resources :lessons do
+    # This must be processed before the default /lessons/:id route
+    get :update_subjects, on: :collection 
+  end
+  
+  # Other Resources
   resources :students
-  resources :lessons
-  resources :payments # Assuming you have a PaymentsController
 
   # Defines the root path route ("/")
   root 'dashboards#index'
-
-  resources :students 
-  resources :lessons do
-    get :update_subjects, on: :collection 
-  end
 end
