@@ -17,7 +17,7 @@
 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
     
     <%# TOTAL STUDENTS %>
-    <div class="card-shadow bg-purple-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+    <div class="card-shadow bg-purple-50 border border-gray-100 p-6 rounded-3xl flex items-center justify-between shadow-md">
         <div>
             <p class="text-sm font-semibold text-gray-500">TOTAL STUDENTS</p>
             <h2 class="text-3xl font-extrabold text-gray-900"><%= @total_students %></h2>
@@ -26,7 +26,7 @@
     </div>
     
     <%# THIS WEEK'S LESSONS %>
-    <div class="card-shadow bg-purple-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+    <div class="card-shadow bg-purple-50 border border-gray-100 p-6 rounded-3xl flex items-center justify-between shadow-md">
         <div>
             <p class="text-sm font-semibold text-gray-500">THIS WEEK'S LESSONS</p>
             <h2 class="text-3xl font-extrabold text-gray-900"><%= @lessons_this_week %></h2>
@@ -35,7 +35,7 @@
     </div>
     
     <%# MONTHLY REVENUE %>
-    <div class="card-shadow bg-green-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+    <div class="card-shadow bg-green-50 border border-gray-100 p-6 rounded-3xl flex items-center justify-between shadow-md">
         <div>
             <p class="text-sm font-semibold text-gray-500">MONTHLY REVENUE</p>
             <h2 class="text-3xl font-extrabold text-gray-900"><%= currency_symbol %><%= '%.2f' % @monthly_revenue %></h2>
@@ -44,7 +44,7 @@
     </div>
     
     <%# OUTSTANDING PAYMENTS %>
-    <div class="card-shadow bg-red-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+    <div class="card-shadow bg-red-50 border border-gray-100 p-6 rounded-3xl flex items-center justify-between shadow-md">
         <div>
             <p class="text-sm font-semibold text-gray-500">OUTSTANDING PAYMENTS</p>
             <h2 class="text-3xl font-extrabold text-gray-900"><%= currency_symbol %><%= '%.2f' % @outstanding_payments_sum %></h2>
@@ -53,13 +53,12 @@
     </div>
 </div>
 
-<%# 💥 FIX: Change lower grid to 4 columns and use col-span-2 on lists 💥 %>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
     
     <%# UPCOMING LESSONS LIST (Spans 2 columns to align under 1 & 2) %>
     <div class="md:col-span-2">
         <%# Outer Card Wrapper %>
-        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100">
+        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100 shadow-md">
             <div class="flex items-center space-x-3 mb-4">
                 <div class="icon text-purple-600" data-lucide="calendar" style="width: 20px; height: 20px;"></div>
                 <h3 class="text-xl font-bold text-gray-900">Upcoming Lessons</h3>
@@ -89,7 +88,7 @@
    <%# RECENT PAYMENTS LIST (Spans 2 columns to align under 3 & 4) %>
     <div class="md:col-span-2">
         <%# Outer Card Wrapper %>
-        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100">
+        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100 shadow-md">
             <div class="flex items-center space-x-3 mb-4">
                 <div class="icon text-teal-500" data-lucide="credit-card" style="width: 20px; height: 20px;"></div>
                 <h3 class="text-xl font-bold text-gray-900">Recent Payments</h3>
