@@ -1,1 +1,124 @@
-<h1>Hello, World!</h1>
+<%# Helper method for consistent pill classes %>
+<%
+  def get_payment_pill_data(lesson)
+    if lesson.paid?
+      { text: 'Paid', class: 'bg-green-100 text-green-800 border border-green-200' }
+    else
+      { text: 'Unpaid', class: 'bg-orange-100 text-orange-800 border border-orange-200' }
+    end
+  end
+
+  currency_symbol = "£" 
+%>
+
+<h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">Dashboard</h1>
+<p class="text-gray-500 mb-8">Welcome back! Here's your tutoring overview.</p>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+    
+    <%# TOTAL STUDENTS %>
+    <div class="card-shadow bg-purple-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+        <div>
+            <p class="text-sm font-semibold text-gray-500">TOTAL STUDENTS</p>
+            <h2 class="text-3xl font-extrabold text-gray-900"><%= @total_students %></h2>
+        </div>
+        <div class="icon text-purple-600" data-lucide="users" style="width: 32px; height: 32px;"></div>
+    </div>
+    
+    <%# THIS WEEK'S LESSONS %>
+    <div class="card-shadow bg-purple-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+        <div>
+            <p class="text-sm font-semibold text-gray-500">THIS WEEK'S LESSONS</p>
+            <h2 class="text-3xl font-extrabold text-gray-900"><%= @lessons_this_week %></h2>
+        </div>
+        <div class="icon text-purple-600" data-lucide="calendar-check" style="width: 32px; height: 32px;"></div>
+    </div>
+    
+    <%# MONTHLY REVENUE %>
+    <div class="card-shadow bg-green-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+        <div>
+            <p class="text-sm font-semibold text-gray-500">MONTHLY REVENUE</p>
+            <h2 class="text-3xl font-extrabold text-gray-900"><%= currency_symbol %><%= '%.2f' % @monthly_revenue %></h2>
+        </div>
+        <div class="icon text-green-600" data-lucide="banknote-arrow-down" style="width: 32px; height: 32px;"></div>
+    </div>
+    
+    <%# OUTSTANDING PAYMENTS %>
+    <div class="card-shadow bg-red-100 border border-gray-100 p-6 rounded-3xl flex items-center justify-between">
+        <div>
+            <p class="text-sm font-semibold text-gray-500">OUTSTANDING PAYMENTS</p>
+            <h2 class="text-3xl font-extrabold text-gray-900"><%= currency_symbol %><%= '%.2f' % @outstanding_payments_sum %></h2>
+        </div>
+        <div class="icon text-red-500" data-lucide="banknote-x" style="width: 32px; height: 32px;"></div>
+    </div>
+</div>
+
+<%# 💥 FIX: Change lower grid to 4 columns and use col-span-2 on lists 💥 %>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    
+    <%# UPCOMING LESSONS LIST (Spans 2 columns to align under 1 & 2) %>
+    <div class="md:col-span-2">
+        <%# Outer Card Wrapper %>
+        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="icon text-purple-600" data-lucide="calendar" style="width: 20px; height: 20px;"></div>
+                <h3 class="text-xl font-bold text-gray-900">Upcoming Lessons</h3>
+            </div>
+            
+            <div class="space-y-3">
+                <% if @upcoming_lessons.any? %>
+                    <% @upcoming_lessons.each do |lesson| %>
+                        <div class="card-shadow bg-gray-50 p-4 rounded-xl flex justify-between items-center border border-gray-100 transition duration-150">
+                            <div>
+                                <p class="font-semibold text-gray-900"><%= lesson.student&.name %></p>
+                                <p class="text-sm text-gray-500"><%= lesson.subject %></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-purple-600"><%= lesson.date&.strftime("%H:%M %p") %></p>
+                                <p class="text-xs text-gray-500"><%= lesson.date.to_date == Time.current.to_date ? 'Today' : lesson.date&.strftime("%A") %></p>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <p class="text-gray-500 pt-3">No upcoming lessons scheduled.</p>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    
+   <%# RECENT PAYMENTS LIST (Spans 2 columns to align under 3 & 4) %>
+    <div class="md:col-span-2">
+        <%# Outer Card Wrapper %>
+        <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="icon text-teal-500" data-lucide="credit-card" style="width: 20px; height: 20px;"></div>
+                <h3 class="text-xl font-bold text-gray-900">Recent Payments</h3>
+            </div>
+            
+            <div class="space-y-3">
+                <% if @recent_payments.any? %>
+                    <% @recent_payments.each do |lesson| %>
+                        <%
+                            payment_data = get_payment_pill_data(lesson)
+                            cost = lesson.duration * (lesson.student&.rate || 0)
+                        %>
+                        <div class="card-shadow bg-gray-50 p-4 rounded-xl flex justify-between items-center border border-gray-100 transition duration-150">
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900"><%= lesson.student&.name %></p>
+                                <p class="text-sm text-gray-500"><%= time_ago_in_words(lesson.date) %> ago</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <p class="font-semibold text-gray-900"><%= currency_symbol %><%= '%.2f' % cost %></p>
+                                <span class="px-3 py-1 text-xs font-medium rounded-full <%= payment_data[:class] %>">
+                                    <%= payment_data[:text] %>
+                                </span>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <p class="text-gray-500 pt-3">No recent payments recorded.</p>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
