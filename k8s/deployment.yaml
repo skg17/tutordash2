@@ -54,6 +54,11 @@ spec:
                 secretKeyRef:
                   name: rails-secret-key
                   key: SECRET_KEY_BASE
+            - name: SIGNUP_KEY # Key required to sign up
+              valueFrom:
+                secretKeyRef:
+                  name: tutor-signup-secret
+                  key: SIGNUP_KEY
             # Re-inject DB user/pass for the main app container
             - name: PGUSER
               valueFrom:
