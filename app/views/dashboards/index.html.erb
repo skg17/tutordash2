@@ -14,7 +14,11 @@
 <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">Dashboard</h1>
 <p class="text-gray-500 mb-8">Welcome back! Here's your tutoring overview.</p>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+<%# STATS ROW - IMPROVED RESPONSIVENESS                                  %>
+<%# grid-cols-1: Mobile (stacks)                                         %>
+<%# sm:grid-cols-2: Small screens/Tablet (2 cards per row)               %>
+<%# md:grid-cols-4: Desktop (4 cards per row)                            %>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
     
     <%# TOTAL STUDENTS %>
     <div class="card-shadow bg-purple-50 border border-gray-100 p-6 rounded-3xl flex items-center justify-between shadow-md">
@@ -53,9 +57,14 @@
     </div>
 </div>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<%# ---------------------------------------------------------------------- %>
+<%# MAIN CONTENT ROW - FIX APPLIED                                       %>
+<%# grid-cols-1: FIX: Forces a single column on mobile (full width cards)%>
+<%# md:grid-cols-4: Maintains 4-column structure for alignment on desktop %>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     
     <%# UPCOMING LESSONS LIST (Spans 2 columns to align under 1 & 2) %>
+    <%# md:col-span-2 ensures it takes 50% width on desktop %>
     <div class="md:col-span-2">
         <%# Outer Card Wrapper %>
         <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100 shadow-md">
@@ -86,6 +95,7 @@
     </div>
     
    <%# RECENT PAYMENTS LIST (Spans 2 columns to align under 3 & 4) %>
+   <%# md:col-span-2 ensures it takes 50% width on desktop %>
     <div class="md:col-span-2">
         <%# Outer Card Wrapper %>
         <div class="card-shadow bg-white p-6 rounded-3xl border border-gray-100 shadow-md">
