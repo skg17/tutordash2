@@ -72,19 +72,25 @@
 
     <!-- JavaScript for Mobile Sidebar Toggle and Icons (Place at end of body) -->
     <script>
-        document.addEventListener('turbo:load', () => { // Use turbo:load for Turbo/Hotwire compatibility
+        window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar');
-            const menuButton = document.getElementById('menu-button');
             const backdrop = document.getElementById('sidebar-backdrop');
             
-            // Function to toggle sidebar visibility on mobile
-            window.toggleSidebar = function() {
+            if (sidebar && backdrop) {
                 sidebar.classList.toggle('-translate-x-full');
                 backdrop.classList.toggle('hidden');
             }
+        }
 
-            // Event listener for the menu button
-            menuButton.addEventListener('click', window.toggleSidebar);
+        document.addEventListener('turbo:load', () => { 
+            const menuButton = document.getElementById('menu-button');
+            
+            if (menuButton) {
+                // Remove existing listener to prevent stacking if using Turbo cache
+                menuButton.removeEventListener('click', window.toggleSidebar); 
+                // Attach the listener to the newly rendered button element
+                menuButton.addEventListener('click', window.toggleSidebar);
+            }
             
             // Re-render Lucide icons after DOM is loaded/Turbo navigation
             lucide.createIcons();
