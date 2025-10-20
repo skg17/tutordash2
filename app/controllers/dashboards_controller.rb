@@ -1,7 +1,8 @@
 class DashboardsController < ApplicationController
   def index
-    @students = Student.all
-    @lessons = Lesson.includes(:student).all # Eager load students for rate/duration calculation
+    @students = current_user.students.all
+
+    @lessons = current_user.lessons.includes(:student) 
 
     @total_students = @students.count
 

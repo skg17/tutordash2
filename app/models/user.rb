@@ -18,10 +18,13 @@ class User < ApplicationRecord
             format: { with: VALID_PASSWORD_REGEX, message: "must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character." },
             if: :password_required?
 
+    has_many :students, dependent: :destroy
+    has_many :lessons, through: :students
+
     private
 
     # Helper to require password only on creation or if it's explicitly changing
     def password_required?
-    new_record? || password.present?
+        new_record? || password.present?
     end
 end
