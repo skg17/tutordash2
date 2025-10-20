@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_13_125356) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_20_112035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_125356) do
     t.string "parent_name"
     t.string "email"
     t.string "phone"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_students_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -50,4 +52,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_125356) do
   end
 
   add_foreign_key "lessons", "students"
+  add_foreign_key "students", "users"
 end

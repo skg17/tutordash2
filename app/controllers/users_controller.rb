@@ -11,27 +11,26 @@ class UsersController < ApplicationController
     end
 
     # POST /users
+    # app/controllers/users_controller.rb
+
     def create
-      # Validate the sign-up key against the ENV variable
-      unless params[:user][:sign_up_key].present? && params[:user][:sign_up_key] == ENV['SIGNUP_KEY']
-          flash.now[:alert] = "The provided sign-up key is invalid."
-          # Rebuilds the user object for rendering the form again
-          @user = User.new(user_params.except(:sign_up_key)) 
-          # Render :new with errors (using flash.now to show the message on the same request)
-          render :new, status: :unprocessable_entity and return
-      end
+        unless params[:user][:sign_up_key].present? && params[:user][:sign_up_key] == ENV['SIGNUP_KEY']
+            flash.now[:alert] = "The provided sign-up key is invalid."
+            
+            # Build resource to retain entered values for re-rendering, excluding the secure key
+            @user = User.new(user_params.except(:sign_up_key)) 
+            render :new, status: :unprocessable_entity and return
+        end
 
-      # Proceed with user creation if key is valid.
-      @user = User.new(user_params.except(:sign_up_key))
+        @user = User.new(user_params.except(:sign_up_key))
 
-      if @user.save
-          # Auto-login after successful signup
-          session[:user_id] = @user.id
-          redirect_to root_path, notice: "Account created successfully! Welcome to TutorDash."
-      else
-          # Failed signup: render form with errors
-          render :new, status: :unprocessable_entity
-      end
+        if @user.save
+            # Auto-login after successful signup
+            session[:user_id] = @user.id
+            redirect_to root_path, notice: "Account created successfully! Welcome to TutorDash."
+        else
+            render :new, status: :unprocessable_entity
+        end
     end
 
     private

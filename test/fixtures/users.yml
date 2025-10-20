@@ -1,11 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+owner:
+  id: 101
+  email: owner@tutordash.com
+  password_digest: <%= password_hash %>
+  name: "Alice Tutor"
 
-one:
-  email: MyString
-  password_digest: MyString
-  name: MyString
-
-two:
-  email: MyString
-  password_digest: MyString
-  name: MyString
+foreign:
+  id: 102
+  email: stranger@tutordash.com
+  password_digest: <%= password_hash %>
+  name: "Bob Stranger"
