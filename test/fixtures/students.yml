@@ -1,7 +1,29 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Student owned by 'owner' (should be found in tests)
+owner_student:
+  id: 201
+  user: owner
+  name: Emma Wilson
+  year: 10
+  current: true
+  subjects: ["Maths", "Physics"]
+  rate: 45.00
+  grade: "A"
+  target: "A*"
+  parent_name: Sarah Wilson
+  email: emma.parent@email.com
+  phone: "555-1234"
 
-one:
-  name: MyString
-
-two:
-  name: MyString
+# Student owned by 'foreign' (should be rejected in scoping tests)
+foreign_student:
+  id: 202
+  user: foreign
+  name: Liam Brown
+  year: 9
+  current: false
+  subjects: ["English", "History"]
+  rate: 40.00
+  grade: "B"
+  target: "A"
+  parent_name: Dave Brown
+  email: liam.parent@email.com
+  phone: "555-5678"
