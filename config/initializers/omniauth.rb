@@ -5,8 +5,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     end
 
     provider :google_oauth2,
-        Rails.application.credentials.dig(:google, :client_id),
-        Rails.application.credentials.dig(:google, :client_secret),
+        ENV['GOOGLE_CLIENT_ID'],
+        ENV['GOOGLE_CLIENT_SECRET'],
         {
             include_granted_scopes: true,
             scope: 'email, profile, https://www.googleapis.com/auth/calendar',
