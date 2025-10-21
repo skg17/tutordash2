@@ -26,7 +26,11 @@
             </div>
             
             <%# This is a button to disconnect the account. Update the path as needed. %>
-            <%= button_to "Disconnect", '#', method: :delete, class: "px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150", data: { turbo_confirm: "Are you sure?" } %>
+            <%= button_to "Disconnect", 
+              disconnect_google_path, 
+              method: :delete, 
+              class: "px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150", 
+              data: { turbo_confirm: "Are you sure you want to disconnect your Google account?" } %>
             </div>
 
         <% else %>

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       get "callback"
     end
   end
+  delete 'disconnect_google', to: 'settings#disconnect_google'
 
   # Settings Route
   resource :settings, only: [:edit, :update]
