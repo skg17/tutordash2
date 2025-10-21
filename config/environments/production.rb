@@ -33,6 +33,11 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
+  # Required when using an Ingress or LoadBalancer:
+  # This tells Rails to trust the X-Forwarded-Proto headers sent by the proxy.
+  config.action_controller.default_url_options = { protocol: 'https' }
+  config.action_mailer.default_url_options = { protocol: 'https' }
+
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 

@@ -4,6 +4,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         config.logger = Rails.logger if Rails.env.development?
     end
 
+    Rails.logger.warn "OMNIAUTH LOAD CHECK: Client ID is nil? #{(ENV['GOOGLE_CLIENT_ID'].nil? || ENV['GOOGLE_CLIENT_ID'].empty?)}"
+
     provider :google_oauth2,
         ENV['GOOGLE_CLIENT_ID'],
         ENV['GOOGLE_CLIENT_SECRET'],
