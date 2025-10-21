@@ -18,13 +18,26 @@
         <h2 class="text-xl font-bold text-gray-900 mb-2">Connected Accounts</h2>
         <p class="text-sm text-gray-600 mb-6">Link your Google account for calendar synchronization and automatic Google Meet link generation.</p>
 
-        <%= form_tag('/oauth/google_oauth2', method: 'post', data: { turbo: false }) do %>
-            <%= hidden_field_tag :origin, edit_settings_path(@user) %>
+        <% if @user.google_connected? %>
+            <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div class="flex items-center">
+                <div class="icon mr-3 text-green-600" data-lucide="check-circle" style="width: 24px; height: 24px;"></div>
+                <span class="text-green-800 font-medium">Google Account is connected.</span>
+            </div>
+            
+            <%# This is a button to disconnect the account. Update the path as needed. %>
+            <%= button_to "Disconnect", '#', method: :delete, class: "px-4 py-2 text-sm font-semibold rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition duration-150", data: { turbo_confirm: "Are you sure?" } %>
+            </div>
 
-            <button type='submit' class='inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150'>
-                <div class="icon mr-2" data-lucide="link" style="width: 16px; height: 16px;"></div>
-                Connect Google Account
-            </button>
+        <% else %>
+            <%= form_tag('/oauth/google_oauth2', method: 'post', data: { turbo: false }) do %>
+                <%= hidden_field_tag :origin, edit_settings_path(@user) %>
+
+                <button type='submit' class='inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150'>
+                    <div class="icon mr-2" data-lucide="link" style="width: 16px; height: 16px;"></div>
+                    Connect Google Account
+                </button>
+            <% end %>
         <% end %>
       </div>
 

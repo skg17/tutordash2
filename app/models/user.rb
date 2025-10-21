@@ -19,10 +19,15 @@ class User < ApplicationRecord
             format: { with: VALID_PASSWORD_REGEX, message: "must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character." },
             if: :password_required?
 
+    def google_connected?
+        google_account = self.user_accounts.find_by(provider: 'google_oauth2')
+        google_account&.connected?
+    end
+
     private
 
     # Helper to require password only on creation or if it's explicitly changing
     def password_required?
-    new_record? || password.present?
+        new_record? || password.present?
     end
 end
