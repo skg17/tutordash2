@@ -260,6 +260,9 @@ GEM
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
+    omniauth-rails_csrf_protection (1.0.2)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     os (1.1.4)
     ostruct (0.6.3)
     parallel (1.27.0)
@@ -480,7 +483,9 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  omniauth
   omniauth-google-oauth2
+  omniauth-rails_csrf_protection
   pg (~> 1.4.5)
   propshaft
   puma (>= 5.0)
