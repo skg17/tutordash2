@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+<body class="p-6 md:p-10 bg-gray-50"> <div class="max-w-4xl mx-auto">
+    <section class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">Settings</h1>
+        <p class="text-gray-500">Manage your account settings and preferences.</p>
+      </div>
+    </section>
+
+    <div class="space-y-4">
+      
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-md">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Connected Accounts</h2>
+        <p class="text-sm text-gray-600 mb-6">Link your Google account for calendar synchronization and automatic Google Meet link generation.</p>
+
+        <%= form_tag('/oauth/google_oauth2', method: 'post', data: { turbo: false }) do %>
+            <%= hidden_field_tag :origin, edit_settings_path(@user) %>
+
+            <button type='submit' class='inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl text-gray-700 border border-gray-300 hover:bg-gray-100 transition duration-150'>
+                <div class="icon mr-2" data-lucide="link" style="width: 16px; height: 16px;"></div>
+                Connect Google Account
+            </button>
+        <% end %>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-md">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Email Address</h2>
+        <p class="text-sm text-gray-600 mb-6">Update your email address for your account.</p>
+
+        <%= form_with url: settings_path, method: :patch, local: true, data: { turbo: true } do |f| %>
+          <div class="flex items-end space-x-3">
+            <div class="flex-grow">
+              <label for="user_email" class="block text-sm font-medium text-gray-700 mb-1">New Email</label>
+              <%= f.email_field :email, 
+                              value: current_user.email,
+                              class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500",
+                              placeholder: "your.email@example.com",
+                              id: "user_email",
+                              required: true %>
+            </div>
+            <%= f.submit 'Update Email', class: "px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-700 transition duration-150 cursor-pointer" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-md">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Password</h2>
+        <p class="text-sm text-gray-600 mb-6">Change your account password. Requires current password for confirmation.</p>
+
+        <%= form_with url: settings_path, method: :patch, local: true, data: { turbo: true } do |f| %>
+          <div class="space-y-4">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <%= f.password_field :current_password, 
+                                     class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500",
+                                     id: "current_password",
+                                     placeholder: "Enter current password" %>
+              </div>
+              <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <%= f.password_field :password, 
+                                     class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500",
+                                     id: "password",
+                                     placeholder: "Enter new password" %>
+              </div>
+            </div>
+            
+            <div>
+              <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+              <%= f.password_field :password_confirmation, 
+                                   class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500",
+                                   id: "password_confirmation",
+                                   placeholder: "Confirm new password" %>
+            </div>
+
+            <%= f.submit 'Update Password', class: "px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-700 transition duration-150 cursor-pointer" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
