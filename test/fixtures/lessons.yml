@@ -1,11 +1,25 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+owner_upcoming_lesson:
+  student: owner_student
+  date: <%= Time.current + 2.days %>
+  duration: 1.5
+  subject: Maths
+  paid: false
+  homework: "Complete integration exercises 5.1-5.5."
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+# Lesson owned by the 'owner' (Completed/Recent)
+owner_recent_lesson:
+  student: owner_student
+  date: <%= Time.current - 5.days %>
+  duration: 1.0
+  subject: Physics
+  paid: true
+  homework: "Reviewed optics section."
+
+# Lesson owned by the 'foreign' user (Should be rejected in scoping tests)
+foreign_lesson:
+  student: foreign_student
+  date: <%= Time.current + 1.day %>
+  duration: 2.0
+  subject: French
+  paid: false
+  homework: "Translate chapter 3."

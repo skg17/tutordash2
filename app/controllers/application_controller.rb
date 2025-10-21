@@ -11,10 +11,7 @@ class ApplicationController < ActionController::Base
 
   # Finds the user object based on the ID stored in the session cookie
   def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
-  rescue ActiveRecord::RecordNotFound
-    session[:user_id] = nil # Clear session if user ID is invalid/deleted
-    redirect_to login_path
+    @current_user ||= User.find_by(id: session[:user_id])
   end
 
   # Checks if a user is logged in
