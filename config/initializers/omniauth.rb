@@ -9,6 +9,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         Rails.application.credentials.dig(:google, :client_secret),
         {
             include_granted_scopes: true,
-            scope: 'email, profile, offline, https://www.googleapis.com/auth/calendar',
+            scope: 'email profile offline https://www.googleapis.com/auth/calendar',
         }
 end
