@@ -36,6 +36,12 @@ spec:
                   key: DB_PASS
             - name: DATABASE_URL
               value: postgres://$(PGUSER):$(PGPASSWORD)@postgres-svc:5432/tutordash_production
+            # Pass Rails key for decryption of Google API credentials
+            - name: RAILS_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rails-app-secrets
+                  key: RAILS_MASTER_KEY
           command: ["/bin/sh", "-c"]
           args: ["echo 'Waiting for DB to be available...'; sleep 5; bundle exec rake db:create || true && bundle exec rake db:migrate"] # Add delay before DB connection
       # 2. MAIN CONTAINERS (Application)

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
     has_secure_password
+    has_many :user_accounts, dependent: :destroy
 
     # Simple email validation
     validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -18,6 +19,11 @@ class User < ApplicationRecord
             format: { with: VALID_PASSWORD_REGEX, message: "must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character." },
             if: :password_required?
 
+    def google_connected?
+        google_account = self.user_accounts.find_by(provider: 'google_oauth2')
+        google_account&.connected?
+    end
+  
     has_many :students, dependent: :destroy
     has_many :lessons, through: :students
 

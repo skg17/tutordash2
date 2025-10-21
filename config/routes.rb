@@ -12,6 +12,18 @@ Rails.application.routes.draw do
     # This must be processed before the default /lessons/:id route
     get :update_subjects, on: :collection 
   end
+
+  # OAuth
+  namespace :oauth do
+    namespace :google_oauth2 do
+      get "callback"
+    end
+  end
+  delete 'disconnect_google', to: 'settings#disconnect_google'
+
+  # Settings Route
+  resource :settings, only: [:edit, :update]
+  get '/settings', to: redirect('/settings/edit')
   
   # Other Resources
   resources :students

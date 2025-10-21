@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_20_112035) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_21_094600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,14 +43,33 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_20_112035) do
     t.index ["user_id"], name: "index_students_on_user_id"
   end
 
+  create_table "user_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "auth_protocol", default: "oauth2"
+    t.string "provider"
+    t.string "provider_account_id"
+    t.string "access_token"
+    t.string "token_type", default: "Bearer"
+    t.string "scope"
+    t.string "refresh_token"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_accounts_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "google_access_token"
+    t.string "google_refresh_token"
+    t.datetime "google_access_token_expires_at"
   end
 
   add_foreign_key "lessons", "students"
   add_foreign_key "students", "users"
+  add_foreign_key "user_accounts", "users"
 end
