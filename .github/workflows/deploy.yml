@@ -38,6 +38,33 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }} # Provided automatically by GitHub
 
+      - name: Run RuboCop
+        # Run RuboCop to make safe corrections only
+        run: |
+          bundle install --jobs 4 --retry 3
+          bundle exec rubocop -a
+
+      - name: Review RuboCop Results
+        uses: reviewdog/action-rubocop@v2
+        if: failure()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+      
+      - name: Commit and Push Fixed Files
+        run: |
+          git config user.name 'GitHub Actions Bot'
+          git config user.email 'actions@github.com'
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Auto-fix style issues with RuboCop"
+
+            echo "Lint fixes commited locally."
+          else
+            echo "No styling issues found."
+          fi
+
       - name: Build and push Docker image
         id: build-push
         uses: docker/build-push-action@v5
@@ -70,7 +97,8 @@ jobs:
           fi
           
           # Change commit message to reflect the SHA
-          git commit -m "CI: Update deployment image to ${{ github.sha_short }}"
+          git commit --amend -m "CI: Deploy image ${{ github.sha_short }}, incorporating auto-style fixes." || \
+          git commit -m "CI: Deploy image ${{ github.sha_short }}" 
           
           # Use the SSH protocol URL
           GIT_URL="https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
