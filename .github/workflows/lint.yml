@@ -26,7 +26,9 @@ jobs:
 
       - name: Run RuboCop
         # Run RuboCop to make safe corrections only
-        run: bundle exec rubocop -a
+        run: |
+          bundle install --jobs 4 --retry 3
+          bundle exec rubocop -a
 
       # Optional: Post the results as a comment/annotation if it fails (requires an action)
       - name: Review RuboCop Results
