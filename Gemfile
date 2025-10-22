@@ -72,3 +72,6 @@ gem 'omniauth-google-oauth2' # For authenticating users via Google
 
 # Add env support
 gem 'dotenv-rails'
+
+# RuboCop for linting
+gem 'rubocop', require: false
