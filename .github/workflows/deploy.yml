@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Configure SSH Key
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           # Use the private key stored as a repository secret
           ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
