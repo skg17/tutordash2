@@ -65,13 +65,13 @@ end
 gem "tailwindcss-rails", "~> 4.3"
 
 # Google API integration
-gem 'google-api-client'      # For communicating with Google Calendar/Meet API
-gem 'omniauth'
-gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-google-oauth2' # For authenticating users via Google
+gem "google-api-client"      # For communicating with Google Calendar/Meet API
+gem "omniauth"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth-google-oauth2" # For authenticating users via Google
 
 # Add env support
-gem 'dotenv-rails'
+gem "dotenv-rails"
 
 # RuboCop for linting
-gem 'rubocop', require: false
+gem "rubocop", require: false

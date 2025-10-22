@@ -6,6 +6,6 @@ class UserAccount < ApplicationRecord
     end
 
     def connected?
-        provider == 'google_oauth2' && provider_account_id.present? && access_token.present?
+        provider == "google_oauth2" && provider_account_id.present? && access_token.present?
     end
 end

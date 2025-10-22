@@ -1,8 +1,8 @@
 class SessionsController < ApplicationController
   # Uses the cleaner auth layout for login/signup pages
-  layout 'auth', only: [:new, :create] 
+  layout "auth", only: [ :new, :create ]
   # Skip authentication requirement for accessing the login form or submitting it
-  skip_before_action :require_user, only: [:new, :create]
+  skip_before_action :require_user, only: [ :new, :create ]
 
   # GET /login
   def new

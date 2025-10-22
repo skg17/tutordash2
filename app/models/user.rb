@@ -20,10 +20,10 @@ class User < ApplicationRecord
             if: :password_required?
 
     def google_connected?
-        google_account = self.user_accounts.find_by(provider: 'google_oauth2')
+        google_account = self.user_accounts.find_by(provider: "google_oauth2")
         google_account&.connected?
     end
-  
+
     has_many :students, dependent: :destroy
     has_many :lessons, through: :students
 

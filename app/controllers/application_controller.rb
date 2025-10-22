@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   # This runs before every action in every controller
   before_action :require_user
-  
+
   # Makes these methods available to views (ERB files)
   helper_method :current_user, :logged_in?
 

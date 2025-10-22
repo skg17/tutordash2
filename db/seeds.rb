@@ -15,7 +15,7 @@ student_one = Student.create!(
   name: "Alex Johnson",
   year: 11,
   current: true,
-  subjects: ["Math", "Physics"],
+  subjects: [ "Math", "Physics" ],
   rate: 65.00,
   grade: "B+",
   target: "A-", # Updated to a simple grade
@@ -28,7 +28,7 @@ student_two = Student.create!(
   name: "Mia Rodriguez",
   year: 8,
   current: true,
-  subjects: ["English", "History"],
+  subjects: [ "English", "History" ],
   rate: 45.00,
   grade: "C",
   target: "B", # Updated to a simple grade
@@ -41,7 +41,7 @@ student_three = Student.create!(
   name: "Tom Miller",
   year: 12,
   current: true,
-  subjects: ["Chemistry"],
+  subjects: [ "Chemistry" ],
   rate: 70.00,
   grade: "A",
   target: "A+", # Updated to a simple grade
@@ -54,7 +54,7 @@ student_four = Student.create!(
   name: "Kylie Chen",
   year: 9,
   current: false, # Discontinued student
-  subjects: ["Spanish"],
+  subjects: [ "Spanish" ],
   rate: 55.00,
   grade: "B",
   target: "B+", # Updated to a simple grade

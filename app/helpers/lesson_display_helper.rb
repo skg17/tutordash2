@@ -4,22 +4,22 @@ module LessonDisplayHelper
   def lesson_status_and_payment_data(lesson)
     # Determine Lesson Status (Upcoming/Completed)
     if lesson.date && lesson.date > Time.current
-      status_text = 'Upcoming'
-      status_class = 'bg-blue-100 text-blue-800 border border-blue-200'
+      status_text = "Upcoming"
+      status_class = "bg-blue-100 text-blue-800 border border-blue-200"
     else
-      status_text = 'Completed'
-      status_class = 'bg-gray-100 text-gray-600 border border-gray-200'
+      status_text = "Completed"
+      status_class = "bg-gray-100 text-gray-600 border border-gray-200"
     end
 
     # Determine Payment Status (Paid/Unpaid)
     if lesson.paid?
-      paid_text = 'Paid'
-      paid_class = 'bg-green-100 text-green-800 border border-green-200'
+      paid_text = "Paid"
+      paid_class = "bg-green-100 text-green-800 border border-green-200"
     else
-      paid_text = 'Unpaid'
-      paid_class = 'bg-orange-100 text-orange-800 border border-orange-200'
+      paid_text = "Unpaid"
+      paid_class = "bg-orange-100 text-orange-800 border border-orange-200"
     end
-    
+
     # Return all data as a hash
     {
       status_text: status_text,
@@ -34,7 +34,7 @@ module LessonDisplayHelper
   def format_lesson_timing(lesson)
     if lesson.date.present? && lesson.duration.present?
       formatted_date = lesson.date.strftime("%d/%m/%Y")
-      start_time = lesson.date.strftime("%H:%M") 
+      start_time = lesson.date.strftime("%H:%M")
       end_datetime = lesson.date + lesson.duration.hours
       end_time = end_datetime.strftime("%H:%M")
       time_range = "#{start_time} - #{end_time}"
